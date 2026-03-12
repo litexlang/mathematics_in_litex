@@ -1,0 +1,65 @@
+# basic examples
+
+claim:
+    forall a, b, c R: a * (b * c) = b * (a * c)
+    prove:
+        do_nothing
+
+claim:
+    forall a, b, c, d, e, f R:
+        a * b = c * d
+        e = f
+        =>:
+            a * (b * e) = c * (d * f)
+    prove:
+        a * (b * e) = a * b * e = (a * b) * e = (c * d) * e = (c * d) * f
+
+claim:
+    forall a, b, c, d, e, f R:
+        b * c = e * f
+        =>:
+            a * b * c * d = a * e * f * d
+    prove:
+        a * b * c * d = a * (b * c )* d = a * (e * f) * d = a * e * f * d
+
+claim:
+    forall a, b, c, d R:
+        c = b * a - d
+        d = a * b
+        =>:
+            c = 0
+    prove:
+        c = b * a - d = b * a - a * b = 0
+
+claim:
+    forall a, b R: (a + b) * (a + b) = a * a + 2 * (a * b) + b * b
+    prove:
+        do_nothing
+
+claim:
+    forall a, b, c, d R:
+        (a + b) * (c + d) = a * c + a * d + b * c + b * d
+    prove:
+        do_nothing
+
+claim:
+    forall a, b R: (a + b) * (a - b) = a^2 - b^2
+    prove:
+        do_nothing
+
+claim:
+    forall a, b, c, d R:
+        c = d * a + b
+        b = a * d
+        =>:
+            c = 2 * a * d
+    prove:
+        c = d * a + b = d * a + a * d = 2 * a * d
+
+claim:
+    forall a, b, c R:
+        a + b = c
+        =>:
+            (a + b) * (a + b) = a * c + b * c
+    prove:
+        (a + b) * (a + b) = (a + b) * c = a * c + b * c
