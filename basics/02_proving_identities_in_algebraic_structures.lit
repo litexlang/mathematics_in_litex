@@ -1,0 +1,52 @@
+# proving identities in algebraic structures
+
+prop is_ring(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, one r, zero r, neg fn(r)r):
+    forall a, b, c r:
+        add(add(a, b), c) = add(a, add(b, c))
+        mul(mul(a, b), c) = mul(a, mul(b, c))
+        mul(a, add(b, c)) = add(mul(a, b), mul(a, c))
+        mul(add(a, b), c) = add(mul(a, c), mul(b, c))
+    forall a, b r:
+        add(a, b) = add(b, a)
+    forall a r:
+        add(zero, a) = add(a, zero) = a
+        add(a, neg(a)) = add(neg(a), a) = zero
+        mul(a, one) = mul(one, a) = a
+    
+prop is_commring(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, one r, zero r, neg fn(r)r):
+    $is_ring(r, add, mul, one, zero, neg)
+    forall a, b r:
+        mul(a, b) = mul(b, a)
+
+claim:
+    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, one r, zero r, neg fn(r)r, a, b, c r:
+        $is_commring(r, add, mul, one, zero, neg)
+        =>:
+            mul(mul(c, b), a) = mul(b, mul(a, c))
+            mul(add(a, b), add(a, b)) = add(add(mul(a, a), add(mul(a, b), mul(a, b))), mul(b, b))
+            mul(add(a, b), add(a, neg(b))) = add(mul(a, a), neg(mul(b, b)))
+    prove:
+        $is_ring(r, add, mul, one, zero, neg)
+        mul(mul(c, b), a) = mul(mul(b, c), a) = mul(b, mul(c, a)) = mul(b, mul(a, c))
+        mul(add(a, b), add(a, b)) = add(mul(add(a, b), a), mul(add(a, b), b)) = add(add(mul(a, a), mul(b, a)), add(mul(a, b), mul(b, b))) = add(mul(a, a), add(mul(b, a), add(mul(a, b), mul(b, b)))) = add(mul(a, a), add(add(mul(b, a), mul(a, b)), mul(b, b))) = add(add(mul(a, a), add(mul(a, b), mul(a, b))), mul(b, b))
+        mul(add(a, b), add(a, neg(b))) = add(mul(a, add(a, neg(b))), mul(b, add(a, neg(b)))) = add(add(mul(a, a), mul(a, neg(b))), add(mul(b, a), mul(b, neg(b)))) = add(add(mul(a, a), mul(a, neg(b))), add(mul(a, b), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, neg(b)), add(mul(a, b), mul(b, neg(b))))) = add(mul(a, a), add(add(mul(a, neg(b)), mul(a, b)), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, add(b, neg(b))), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, zero), mul(b, neg(b))))
+
+        mul(a, zero) = mul(a, add(zero, zero)) = add(mul(a, zero), mul(a, zero))
+        zero = add(neg(mul(a, zero)), mul(a, zero)) = add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(add(neg(mul(a, zero)), mul(a, zero)), mul(a, zero)) = add(0, mul(a, zero)) = mul(a, zero)
+
+        mul(b, neg(b)) = add(mul(b, neg(b)), zero) = add(mul(b, neg(b)), add(mul(b, b), neg(mul(b, b)))) = add(add(mul(b, neg(b)), mul(b, b)), neg(mul(b, b))) = add(mul(b, add(neg(b), b)), neg(mul(b, b))) = add(mul(b, zero), neg(mul(b, b))) = add(zero, neg(mul(b, b))) = neg(mul(b, b))
+
+        mul(add(a, b), add(a, neg(b))) = add(mul(a, a), add(mul(a, zero), mul(b, neg(b)))) = add(mul(a, a), add(zero, mul(b, neg(b)))) = add(mul(a, a), mul(b, neg(b))) = add(mul(a, a), neg(mul(b, b)))
+
+
+claim:
+    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, one r, zero r, neg fn(r)r, a, b, c, d r:
+        $is_commring(r, add, mul, one, zero, neg)
+        c = add(mul(d, a), b)
+        b = mul(a, d)
+        =>:
+            c = add(mul(a, d), mul(a, d))
+    prove:
+        $is_ring(r, add, mul, one, zero, neg)
+        c = add(mul(d, a), b) = add(mul(d, a), mul(a, d)) = add(mul(a, d), mul(a, d))
+
