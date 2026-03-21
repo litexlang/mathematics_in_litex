@@ -1,0 +1,69 @@
+# 2.4 More examples on order and divisibility
+
+have min fn(R, R) R
+know:
+    forall a, b R:
+        a <= b
+        =>:
+            min(a, b) = min(b, a) = a
+
+# min_le_left
+claim:
+    forall a, b R: min(a, b) <= a
+    prove:
+        a <= b or a > b
+        cases:
+            =>:
+                min(a, b) <= a
+            case a <= b:
+                min(a, b) = min(b, a) = a
+                a <= a
+                min(a, b) <= a
+            case a > b:
+                b <= a
+                min(a, b) = min(b, a) = b
+                min(a, b) <= a
+
+# min_le_right
+claim:
+    forall a, b R: min(a, b) <= b
+    prove:
+        a <= b or a > b
+        cases:
+            =>:
+                min(a, b) <= b
+            case a <= b:
+                min(a, b) = min(b, a) = a
+                a <= b
+                min(a, b) <= b
+            case a > b:
+                b <= b
+                min(a, b) = min(b, a) = b
+                min(a, b) <= b
+
+claim:
+    forall a, b, c R:
+        c <= a
+        c <= b
+        =>:
+            c <= min(a, b)
+    prove:
+        a >= b or a < b
+        cases:
+            =>:
+                min(a, b) = a or min(a, b) = b
+            case a >= b:
+                min(a, b) = min(b, a) = b
+            case a < b:
+                min(a, b) = min(b, a) = a
+        cases:
+            =>:
+                c <= min(a, b)
+            case min(a, b) = a:
+                c <= a
+                c <= min(a, b)
+            case min(a, b) = b:
+                c <= b
+                c <= min(a, b)
+
+
