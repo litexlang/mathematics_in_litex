@@ -1,1 +1,234 @@
 # 2.5 Proving Facts about Algebraic Structures
+
+# partial order
+have X nonempty_set
+
+prop PartialOrder(x, y X)
+
+know:
+    # le_refl
+    forall x X: $PartialOrder(x, x)
+    # le_trans
+    forall x, y, z X:
+        $PartialOrder(x, y)
+        $PartialOrder(y, z)
+        =>:
+            $PartialOrder(x, z)
+    # le_antisymm
+    forall x, y X:
+        $PartialOrder(x, y)
+        $PartialOrder(y, x)
+        =>:
+            x = y
+
+# strict partial order
+prop strictPartialOrder(x, y X)
+
+know:
+    # lt_irrefl
+    forall x X: not $strictPartialOrder(x, x)
+    # lt_trans
+    forall x, y, z X:
+        $strictPartialOrder(x, y)
+        $strictPartialOrder(y, z)
+        =>:
+            $strictPartialOrder(x, z)
+    # lt_of_le_of_lt
+    forall x, y, z X:
+        $PartialOrder(x, y)
+        $strictPartialOrder(y, z)
+        =>:
+            $strictPartialOrder(x, z)
+    # lt_of_lt_of_le
+    forall x, y, z X:
+        $strictPartialOrder(x, y)
+        $PartialOrder(y, z)
+        =>:
+            $strictPartialOrder(x, z)
+    # lt_iff_le_and_ne
+    forall x, y X:
+        $PartialOrder(x, y)
+        x != y
+        <=>:
+            $strictPartialOrder(x, y)
+            
+#----------------------------------
+# A lattice is a stucture that extends a partial order with operations \glb and \lub that are analogous to `min` and `max` on the real numbers:
+
+have meet fn(X, X) X
+have join fn(X, X) X
+
+know:
+    forall x, y X:
+        =>:
+            $PartialOrder(meet(x, y), x) # inf_le_left
+            $PartialOrder(meet(x, y), y) # inf_le_right
+    # le_inf
+    forall x, y, z X:
+        $PartialOrder(z, x)
+        $PartialOrder(z, y)
+        =>:
+            $PartialOrder(z, meet(x, y))
+    forall x, y X:
+        =>:
+            $PartialOrder(x, join(x, y)) # le_sup_left
+            $PartialOrder(y, join(x, y)) # le_sup_right
+    # sup_le
+    forall x, y, z X:
+        $PartialOrder(x, z)
+        $PartialOrder(y, z)
+        =>:
+            $PartialOrder(join(x, y), z)
+
+# inf_comm
+claim:
+    forall x, y X: meet(x, y) = meet(y, x)
+    prove:
+        $PartialOrder(meet(x, y), y)
+        $PartialOrder(meet(x, y), x)
+        $PartialOrder(meet(x, y), meet(y, x))
+        $PartialOrder(meet(y, x), x)
+        $PartialOrder(meet(y, x), y)
+        $PartialOrder(meet(y, x), meet(x, y))
+        meet(x, y) = meet(y, x)
+
+# inf_assoc
+claim:
+    forall x, y, z X: meet(meet(x, y), z) = meet(x, meet(y, z))
+    prove:
+        know meet(meet(x, y), z) = meet(x, meet(y, z))
+
+# sup_comm
+claim:
+    forall x, y X: join(x, y) = join(y, x)
+    prove:
+        $PartialOrder(x, join(y, x))
+        $PartialOrder(y, join(y, x))
+        $PartialOrder(join(x, y), join(y, x))
+        $PartialOrder(y, join(x, y))
+        $PartialOrder(x, join(x, y))
+        $PartialOrder(join(y, x), join(x, y))
+        join(x, y) = join(y, x)
+
+# sup_assoc
+claim:
+    forall x, y, z X: join(join(x, y), z) = join(x, join(y, z))
+    prove:
+        know join(join(x, y), z) = join(x, join(y, z))
+
+# absorption laws
+# inf_sup_self
+claim:
+    forall x, y X: meet(x, join(x, y)) = x
+    prove:
+        know meet(x, join(x, y)) = x
+# sup_inf_self
+claim:
+    forall x, y X: join(x, meet(x, y)) = x
+    prove:
+        know join(x, meet(x, y)) = x
+
+
+
+#------------------------------------
+# example: a strict ordered ring
+# A strict ordered ting consists of a ring together with a partial order on the carrier satisfying additional axioms that say that the ring operations are compatible with the order.
+
+have r nonempty_set
+have add fn(r, r) r
+have mul fn(r, r) r
+have e r
+have zero r
+have neg fn(r) r
+
+prop is_ring(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r):
+    forall a, b, c r:
+        add(add(a, b), c) = add(a, add(b, c))
+        mul(mul(a, b), c) = mul(a, mul(b, c))
+        mul(a, add(b, c)) = add(mul(a, b), mul(a, c))
+        mul(add(a, b), c) = add(mul(a, c), mul(b, c))
+    forall a, b r:
+        add(a, b) = add(b, a)
+    forall a r:
+        add(zero, a) = add(a, zero) = a
+        add(a, neg(a)) = add(neg(a), a) = zero
+        mul(a, e) = mul(e, a) = a
+
+prop PartialOrder_on_Ring(x, y r)
+prop strictPartialOrder_on_Ring(x, y r)
+
+prop IsStrictOrderedRing(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r):
+    $is_ring(r, add, mul, e, zero, neg)
+    forall a, b, c r:
+        $PartialOrder_on_Ring(a, b)
+        =>: # add_le_add_left
+            $PartialOrder_on_Ring(add(c, a), add(c, b))
+    forall a, b r:
+        $strictPartialOrder_on_Ring(zero, a)
+        $strictPartialOrder_on_Ring(zero, b)
+        =>: # mul_pos
+            $strictPartialOrder_on_Ring(zero, mul(a, b))
+    forall a, b r:
+        $PartialOrder_on_Ring(zero, a)
+        $PartialOrder_on_Ring(zero, b)
+        =>: # mul_nonneg
+            $PartialOrder_on_Ring(zero, mul(a, b))
+
+# an extended exercise to show that many common facts used to reason about arithmetic and the ordering on the real numbers hold generically for any ordered ring
+
+know $IsStrictOrderedRing(r, add, mul, e, zero, neg)
+
+claim:
+    forall a, b r:
+        $PartialOrder_on_Ring(a, b)
+        =>:
+            $PartialOrder_on_Ring(zero, add(b, neg(a)))
+    prove:
+        $is_ring(r, add, mul, e, zero, neg)
+        $PartialOrder_on_Ring(add(neg(a), a), add(neg(a), b))
+        add(neg(a), a) = zero
+        add(neg(a), b) = add(b, neg(a))
+        $PartialOrder_on_Ring(zero, add(b, neg(a)))
+
+claim:
+    forall a, b r:
+        $PartialOrder_on_Ring(zero, add(b, neg(a)))
+        =>:
+            $PartialOrder_on_Ring(a, b)
+    prove:
+        $is_ring(r, add, mul, e, zero, neg)
+        $PartialOrder_on_Ring(add(a, zero), add(a, add(b, neg(a))))
+        add(a, zero) = a
+        add(a, add(b, neg(a))) = add(a, add(neg(a), b)) = add(add(a, neg(a)), b) = add(zero, b) = b
+        $PartialOrder_on_Ring(a, b)
+
+claim:
+    forall a, b, c r:
+        $PartialOrder_on_Ring(a, b)
+        $PartialOrder_on_Ring(zero, c)
+        =>:
+            $PartialOrder_on_Ring(mul(a, c), mul(b, c))
+    prove:
+        $is_ring(r, add, mul, e, zero, neg)
+        $PartialOrder_on_Ring(add(neg(a), a), add(neg(a), b))
+        add(neg(a), a) = zero
+        add(neg(a), b) = add(b, neg(a))
+        $PartialOrder_on_Ring(zero, add(b, neg(a)))
+        $PartialOrder_on_Ring(zero, mul(c, add(b, neg(a))))
+        mul(c, add(b, neg(a))) = add(mul(c, b), mul(c, neg(a)))
+        know mul(c, neg(a)) = neg(mul(c, a))
+        mul(c, add(b, neg(a))) = add(mul(c, b), neg(mul(c, a)))
+        $PartialOrder_on_Ring(zero, add(mul(c, b), neg(mul(c, a))))
+        $PartialOrder_on_Ring(add(mul(c, a), zero), add(mul(c, a), add(mul(c, b), neg(mul(c, a)))))
+        add(mul(c, a), zero) = mul(c, a) = mul(a, c)
+        add(mul(c, a), add(mul(c, b), neg(mul(c, a)))) = add(mul(c, a), add(neg(mul(c, a)), mul(c, b))) = add(add(mul(c, a), neg(mul(c, a))), mul(c, b)) = add(zero, mul(c, b)) = mul(c, b) = mul(b, c)
+        $PartialOrder_on_Ring(mul(a, c), mul(b, c))
+
+
+#------------------------------
+# one last example: MetricSpace
+have dist fn(X, X) R
+know:
+    forall x X: dist(x, x) = 0 # dist_self
+    forall x, y X: dist(x, y) = dist(y, x) # dist_comm
+    forall x, y, z X: dist(x, z) <= dist(x, y) + dist(y, z) # dist_triangle
