@@ -1,0 +1,48 @@
+# 3.1 Implication and the Universal Quantifier
+
+claim:
+    forall x R:
+        0 <= x
+        =>:
+            abs(x) = x
+    prove:
+        do_nothing
+
+claim:
+    forall x, y, epsilon R:
+        0 < epsilon
+        epsilon <= 1
+        abs(x) < epsilon
+        abs(y) < epsilon
+        =>:
+            abs(x * y) < epsilon
+    prove:
+        abs(x * y) = abs(x) * abs(y)
+        abs(x) >= 0
+        abs(y) >= 0
+        abs(x) > 0 or abs(x) = 0
+        epsilon * epsilon <= epsilon * 1
+        epsilon * epsilon <= epsilon
+        cases:
+            =>:
+                abs(x * y) < epsilon
+            case abs(x) > 0:
+                abs(x) * abs(y) < abs(x) * epsilon
+                abs(x) * epsilon < epsilon * epsilon
+                abs(x) * abs(y) < epsilon * epsilon
+                epsilon * epsilon < epsilon or epsilon * epsilon = epsilon
+                cases:
+                    =>:
+                        abs(x * y) < epsilon
+                    case epsilon * epsilon < epsilon:
+                        abs(x) * abs(y) < epsilon
+                        abs(x * y) = abs(x) * abs(y)
+                        abs(x * y) < epsilon
+                    case epsilon * epsilon = epsilon:
+                        abs(x) * abs(y) < epsilon
+                        abs(x * y) = abs(x) * abs(y)
+                        abs(x * y) < epsilon
+            case abs(x) = 0:
+                abs(x * y) = abs(x) * abs(y) = 0 * abs(y) = 0
+                0 < epsilon
+                abs(x * y) < epsilon
