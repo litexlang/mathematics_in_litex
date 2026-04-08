@@ -1,0 +1,258 @@
+# 3.3 Negation
+
+claim:
+    forall a, b R:
+        a < b
+        =>:
+            not b < a
+    prove:
+        assume b < a
+        a < a
+        lt_trans(a, b, a)
+        lt_irrefl(a)
+
+have f fn(R) R
+
+prop FnUb(f fn(R) R, a R):
+    forall x R: f(x) <= a
+
+prop FnLb(f fn(R) R, a R):
+    forall x R: a <= f(x)
+
+prop FnHasUb(f fn(R) R):
+    exists a R: $FnUb(f, a)
+
+prop FnHasLb(f fn(R) R):
+    exists a R: $FnLb(f, a)
+
+claim:
+    forall f fn(R) R:
+        forall a R:
+            exists x R:
+                f(x) > a
+        =>:
+            not $FnHasUb(f)
+    prove:
+        assume $FnHasUb(f)
+        exists a R: $FnUb(f, a)
+        exists x R: f(x) > a
+        f(x) <= a
+        linarith
+
+claim:
+    forall f fn(R) R:
+        forall a R:
+            exists x R:
+                f(x) < a
+        =>:
+            not $FnHasLb(f)
+    prove:
+        do_nothing
+
+claim:
+    not $FnHasUb(fn(x R: x))
+    prove:
+        do_nothing
+
+# library facts: not_le_of_gt, not_lt_of_ge, lt_of_not_ge, le_of_not_gt
+
+prop Monotone(f fn(R) R):
+    forall a, b R:
+        a <= b
+        =>:
+            f(a) <= f(b)
+
+claim:
+    forall f fn(R) R, a, b R:
+        $Monotone(f)
+        f(a) < f(b)
+        =>:
+            a < b
+    prove:
+        do_nothing
+
+claim:
+    forall f fn(R) R, a, b R:
+        a <= b
+        f(b) < f(a)
+        =>:
+            not $Monotone(f)
+    prove:
+        do_nothing
+
+claim:
+    not forall f fn(R) R:
+        $Monotone(f)
+        =>:
+            forall a, b R:
+                f(a) <= f(b)
+                =>:
+                    a <= b
+    prove:
+        do_nothing
+
+claim:
+    forall x R:
+        forall epsilon R:
+            epsilon > 0
+            =>:
+                x < epsilon
+        =>:
+            x <= 0
+    prove:
+        do_nothing
+
+# section: quantifier exchange on a type alpha
+
+claim:
+    forall P fn(alpha) prop:
+        not exists x alpha: P(x)
+        =>:
+            forall x alpha: not P(x)
+    prove:
+        do_nothing
+
+claim:
+    forall P fn(alpha) prop:
+        forall x alpha: not P(x)
+        =>:
+            not exists x alpha: P(x)
+    prove:
+        do_nothing
+
+claim:
+    forall P fn(alpha) prop:
+        not forall x alpha: P(x)
+        =>:
+            exists x alpha: not P(x)
+    prove:
+        do_nothing
+
+claim:
+    forall P fn(alpha) prop:
+        exists x alpha: not P(x)
+        =>:
+            not forall x alpha: P(x)
+    prove:
+        do_nothing
+
+claim:
+    forall P fn(alpha) prop:
+        not forall x alpha: P(x)
+        =>:
+            exists x alpha: not P(x)
+    prove:
+        do_nothing
+
+claim:
+    forall Q prop:
+        not not Q
+        =>:
+            Q
+    prove:
+        do_nothing
+
+claim:
+    forall Q prop:
+        Q
+        =>:
+            not not Q
+    prove:
+        do_nothing
+
+claim:
+    forall f fn(R) R:
+        not $FnHasUb(f)
+        =>:
+            forall a R:
+                exists x R:
+                    f(x) > a
+    prove:
+        do_nothing
+
+claim:
+    forall f fn(R) R:
+        not forall a R:
+            exists x R:
+                f(x) > a
+        =>:
+            $FnHasUb(f)
+    prove:
+        not forall a ...
+        exists a R: forall x R: f(x) <= a
+        $FnHasUb(f)
+
+claim:
+    forall f fn(R) R:
+        not $FnHasUb(f)
+        =>:
+            forall a R:
+                exists x R:
+                    f(x) > a
+    prove:
+        $FnHasUb(f) unfolds to exists a ...
+        not exists ...
+        forall a ... not ...
+        push_neg
+
+claim:
+    forall f fn(R) R:
+        not $Monotone(f)
+        =>:
+            exists x, y R:
+                x <= y
+                f(y) < f(x)
+    prove:
+        do_nothing
+
+claim:
+    forall f fn(R) R:
+        not $FnHasUb(f)
+        =>:
+            forall a R:
+                exists x R:
+                    f(x) > a
+    prove:
+        contrapose
+        $FnHasUb(f)
+
+claim:
+    forall x R:
+        forall epsilon R:
+            epsilon > 0
+            =>:
+                x <= epsilon
+        =>:
+            x <= 0
+    prove:
+        contrapose
+        exists epsilon R: not (x <= epsilon)
+        epsilon = x / 2
+
+claim:
+    forall a N:
+        0 < 0
+        =>:
+            a > 37
+    prove:
+        exfalso
+        lt_irrefl(0)
+
+claim:
+    forall a N:
+        0 < 0
+        =>:
+            a > 37
+    prove:
+        absurd(0 < 0, not 0 < 0)
+        lt_irrefl(0)
+
+claim:
+    forall a N:
+        0 < 0
+        =>:
+            a > 37
+    prove:
+        not 0 < 0
+        lt_irrefl(0)
+        contradiction
