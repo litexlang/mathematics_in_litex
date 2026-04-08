@@ -1,0 +1,336 @@
+# 4.1 Sets
+
+# Let alpha be a type; s, t, u range over subsets of alpha (modeled as `set`).
+have alpha nonempty_set
+have s, t, u set
+
+# example: s ⊆ t implies s ∩ u ⊆ t ∩ u
+claim:
+    forall x alpha:
+        s $subset_of t
+        x $in intersection(s, u)
+        =>:
+            x $in intersection(t, u)
+    prove:
+        x $in s
+        x $in u
+        s $subset_of t
+        x $in t
+        x $in intersection(t, u)
+
+claim:
+    forall x alpha:
+        s $subset_of t
+        x $in intersection(s, u)
+        =>:
+            x $in intersection(t, u)
+    prove:
+        x $in s
+        x $in u
+        x $in t
+        x $in intersection(t, u)
+
+claim:
+    forall x alpha:
+        s $subset_of t
+        x $in intersection(s, u)
+        =>:
+            x $in intersection(t, u)
+    prove:
+        x $in intersection(s, u)
+        x $in t
+        x $in u
+
+claim:
+    forall x alpha:
+        s $subset_of t
+        x $in intersection(s, u)
+        =>:
+            x $in intersection(t, u)
+    prove:
+        intersection(s, u) $subset_of intersection(t, u)
+
+claim:
+    forall x alpha:
+        x $in intersection(s, union(t, u))
+        =>:
+            x $in union(intersection(s, t), intersection(s, u))
+    prove:
+        x $in s
+        x $in union(t, u)
+        x $in t or x $in u
+        by cases:
+            prove:
+                x $in union(intersection(s, t), intersection(s, u))
+            case x $in t:
+                x $in intersection(s, t)
+            case x $in u:
+                x $in intersection(s, u)
+
+claim:
+    forall x alpha:
+        x $in intersection(s, union(t, u))
+        =>:
+            x $in union(intersection(s, t), intersection(s, u))
+    prove:
+        x $in s
+        x $in t or x $in u
+        left or right into union
+
+claim:
+    union(intersection(s, t), intersection(s, u)) $subset_of intersection(s, union(t, u))
+    prove:
+        do_nothing
+
+claim:
+    forall x alpha:
+        x $in set_minus(set_minus(s, t), u)
+        =>:
+            x $in set_minus(s, union(t, u))
+    prove:
+        x $in s
+        not x $in t
+        not x $in u
+        not x $in union(t, u)
+
+claim:
+    forall x alpha:
+        x $in set_minus(set_minus(s, t), u)
+        =>:
+            x $in set_minus(s, union(t, u))
+    prove:
+        x $in s
+        not x $in union(t, u)
+
+claim:
+    set_minus(s, union(t, u)) $subset_of set_minus(set_minus(s, t), u)
+    prove:
+        do_nothing
+
+claim:
+    intersection(s, t) = intersection(t, s)
+    prove:
+        by extension:
+            prove:
+                intersection(s, t) = intersection(t, s)
+            forall x intersection(s, t):
+                x $in intersection(t, s)
+            forall x intersection(t, s):
+                x $in intersection(s, t)
+
+claim:
+    intersection(s, t) = intersection(t, s)
+    prove:
+        forall x alpha:
+            x $in intersection(s, t)
+            <=>:
+            x $in intersection(t, s)
+
+claim:
+    intersection(s, t) = intersection(t, s)
+    prove:
+        do_nothing
+
+claim:
+    intersection(s, t) = intersection(t, s)
+    prove:
+        intersection(s, t) $subset_of intersection(t, s)
+        intersection(t, s) $subset_of intersection(s, t)
+
+claim:
+    intersection(s, t) = intersection(t, s)
+    prove:
+        do_nothing
+
+claim:
+    intersection(s, union(s, t)) = s
+    prove:
+        do_nothing
+
+claim:
+    union(s, intersection(s, t)) = s
+    prove:
+        do_nothing
+
+claim:
+    union(set_minus(s, t), t) = union(s, t)
+    prove:
+        do_nothing
+
+claim:
+    union(set_minus(s, t), set_minus(t, s)) = set_minus(union(s, t), intersection(s, t))
+    prove:
+        do_nothing
+
+# evens = { n : ℕ | Even n }; odds = { n : ℕ | ¬Even n }
+have evens set
+have odds set
+
+have univ_N set
+know:
+    forall n N:
+        n $in univ_N
+
+claim:
+    union(evens, odds) = univ_N
+    prove:
+        forall n N:
+            n $in evens or n $in odds
+        union(evens, odds) = univ_N
+
+claim:
+    forall x N:
+        x $in {}
+        =>:
+            false
+    prove:
+        not x $in {}
+
+claim:
+    forall x N:
+        x $in univ_N
+    prove:
+        do_nothing
+
+claim:
+    intersection(n N: n is prime, n N: n > 2) $subset_of n N: n is odd
+    prove:
+        do_nothing
+
+# #print Prime
+# #print Nat.Prime
+
+claim:
+    forall n N:
+        n is prime (Prime)
+        <=>:
+        n is prime (Nat.Prime)
+    prove:
+        do_nothing
+
+claim:
+    forall n N:
+        n is prime (Prime)
+        =>:
+        n is prime (Nat.Prime)
+    prove:
+        do_nothing
+
+claim:
+    forall n N:
+        n is prime (Prime)
+        =>:
+        n is prime (Nat.Prime)
+    prove:
+        do_nothing
+
+have s_nat set
+have t_nat set
+
+claim:
+    forall x N:
+        forall y s_nat:
+            y is not even
+        forall y s_nat:
+            y is prime
+        x $in s_nat
+        =>:
+            x is not even
+            x is prime
+    prove:
+        x is not even
+        x is prime
+
+claim:
+    forall x N:
+        exist x s_nat st x is not even and x is prime
+        =>:
+            exist x s_nat st x is prime
+    prove:
+        witness
+
+claim:
+    forall x N:
+        forall y t_nat:
+            y is not even
+        forall y t_nat:
+            y is prime
+        s_nat $subset_of t_nat
+        x $in s_nat
+        =>:
+            x is not even
+            x is prime
+    prove:
+        do_nothing
+
+claim:
+    forall x N:
+        exist x s_nat st x is not even and x is prime
+        s_nat $subset_of t_nat
+        =>:
+            exist x t_nat st x is prime
+    prove:
+        do_nothing
+
+have I nonempty_set
+have A fn(I) set
+have B fn(I) set
+
+# (s ∩ ⋃ i, A i) = ⋃ i, (A i ∩ s)
+claim:
+    intersection(s, bigcup_i(A)) = bigcup_i(fn(i I: intersection(A(i), s)))
+    prove:
+        do_nothing
+
+# (⋂ i, (A i ∩ B i)) = (⋂ i, A i) ∩ (⋂ i, B i)
+claim:
+    bigcap_i(fn(i I: intersection(A(i), B(i)))) = intersection(bigcap_i(A), bigcap_i(B))
+    prove:
+        do_nothing
+
+# s ∪ (⋂ i, A i) = ⋂ i, (A i ∪ s)
+claim:
+    union(s, bigcap_i(A)) = bigcap_i(fn(i I: union(A(i), s)))
+    prove:
+        do_nothing
+
+have primes set
+know:
+    forall n N:
+        n $in primes
+        <=>:
+        n is prime (Nat.Prime)
+
+# ⋃ p ∈ primes, { x | p^2 ∣ x } = { x | ∃ p ∈ primes, p^2 ∣ x }
+claim:
+    bigcup_p_in(primes, n N: p^2 divides x) = n N: exist p p $in primes st p^2 divides n
+    prove:
+        do_nothing
+
+claim:
+    bigcup_p_in(primes, n N: p^2 divides x) = n N: exist p p $in primes st p^2 divides n
+    prove:
+        do_nothing
+
+claim:
+    bigcap_p_in(primes, n N: not p divides n) $subset_of n N: n = 1
+    prove:
+        do_nothing
+
+claim:
+    bigcup_p_in(primes, n N: n <= p) = univ_N
+    prove:
+        do_nothing
+
+have S_collection set
+
+# ⋃₀ S = ⋃_{T ∈ S} T
+claim:
+    union0(S_collection) = bigcup_T_in(S_collection, T)
+    prove:
+        do_nothing
+
+claim:
+    inter0(S_collection) = bigcap_T_in(S_collection, T)
+    prove:
+        do_nothing
