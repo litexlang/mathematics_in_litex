@@ -1,0 +1,60 @@
+# 4.3 The Schröder–Bernstein Theorem
+
+# noncomputable section; open Classical; beta is nonempty
+
+have alpha nonempty_set
+have beta nonempty_set
+know:
+    $is_nonempty_set(beta)
+
+have f fn(alpha) beta
+have g fn(beta) alpha
+
+# def sbAux : ℕ → Set α
+# | 0 => univ \ g '' univ
+# | n + 1 => g '' (f '' sbAux n)
+have sbAux fn(N) set
+
+# def sbSet := ⋃ n, sbAux f g n
+have sbSet set
+
+# def sbFun (x : α) : β := if x ∈ sbSet f g then f x else invFun g x
+have sbFun fn(alpha) beta
+
+claim:
+    forall x alpha:
+        not x $in sbSet
+        =>:
+        g(invFun(g, x)) = x
+    prove:
+        do_nothing
+
+claim:
+    Injective(f)
+    =>:
+    Injective(sbFun)
+    prove:
+        do_nothing
+
+claim:
+    Injective(g)
+    =>:
+    Surjective(sbFun)
+    prove:
+        do_nothing
+
+# end section (f, g)
+
+claim:
+    Injective(f)
+    Injective(g)
+    =>:
+    exist h fn(alpha) beta st Bijective(h)
+    prove:
+        sbFun
+
+# Auxiliary #check lines from MIL (invFun g, leftInverse_invFun, invFun_eq)
+# #check invFun g : α → β
+# #check Injective g → LeftInverse (invFun g) g
+# #check Injective g → ∀ y, invFun g (g y) = y
+# #check (∃ y, g y = x) → g (invFun g x) = x
