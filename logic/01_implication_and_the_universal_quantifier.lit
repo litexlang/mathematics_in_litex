@@ -1,6 +1,8 @@
 # 3.1 Implication and the Universal Quantifier
 
-# #check
+#--------------------------------------
+# In words, we would say "for every real number x, if 0 \le x then the absolute value of x equals x".
+
 claim:
     forall x R:
         0 <= x
@@ -9,61 +11,9 @@ claim:
     prove:
         do_nothing
 
-# #check
-claim:
-    forall x, y, epsilon R:
-        0 < epsilon
-        epsilon <= 1
-        abs(x) < epsilon
-        abs(y) < epsilon
-        =>:
-            abs(x * y) < epsilon
-    prove:
-        do_nothing
+#--------------------------------------
+# In words, we would say "for every x, y and \epsilon, if 0 < \epsilon \le 1, the absolute value of x is less than \epsilon, and the absolute value of y is less than \epsilom, then the absolute value of x * y is less than \epsilon".
 
-# theorem my_lemma
-claim:
-    forall x, y, epsilon R:
-        0 < epsilon
-        epsilon <= 1
-        abs(x) < epsilon
-        abs(y) < epsilon
-        =>:
-            abs(x * y) < epsilon
-    prove:
-        do_nothing
-
-# section: a, b, delta R; 0 < delta; delta <= 1; abs(a) < delta; abs(b) < delta
-# #check my_lemma a b delta; #check partial application; #check full application
-
-# theorem my_lemma2
-claim:
-    forall x, y, epsilon R:
-        0 < epsilon
-        epsilon <= 1
-        abs(x) < epsilon
-        abs(y) < epsilon
-        =>:
-            abs(x * y) < epsilon
-    prove:
-        do_nothing
-
-# section: implicit arguments as above
-# #check my_lemma2 with hypotheses
-
-# theorem my_lemma3
-claim:
-    forall x, y, epsilon R:
-        0 < epsilon
-        epsilon <= 1
-        abs(x) < epsilon
-        abs(y) < epsilon
-        =>:
-            abs(x * y) < epsilon
-    prove:
-        do_nothing
-
-# theorem my_lemma4
 claim:
     forall x, y, epsilon R:
         0 < epsilon
@@ -103,7 +53,11 @@ claim:
                 0 < epsilon
                 abs(x * y) < epsilon
 
+#---------------------------------
+# Universal quantifiers are often hidden in definitions. For example, let’s define two predicates, `FnUb f a` and `FnLb f a`, where `f` is a function from the real numbers to the real numbers and `a` is a real number. The first says that `a` is an upper bound on the values of `f`, and the second says that `a` is a lower bound on the values of `f`. 
+
 have f fn(R) R
+have g fn(R) R
 
 prop FnUb(f fn(R) R, a R):
     forall x R: f(x) <= a
@@ -112,48 +66,88 @@ prop FnLb(f fn(R) R, a R):
     forall x R: a <= f(x)
 
 claim:
-    forall f, g fn(R) R, a, b R:
+    forall a, b, x R:
         $FnUb(f, a)
         $FnUb(g, b)
         =>:
-            $FnUb(fn(x R: f(x) + g(x)), a + b)
+            f(x) + g(x) <= a + b
     prove:
         forall x R:
-            f(x) + g(x) <= a + b
-        f(x) <= a
-        g(x) <= b
-        add_le_add
-        $FnUb(f, a)
-        $FnUb(g, b)
+            =>:
+                f(x) <= a
+                g(x) <= b
+                f(x) + g(x) <= a + g(x)
+                a + g(x) <= a + b
+                f(x) + g(x) <= a + b
 
 claim:
-    forall f, g fn(R) R, a, b R:
+    forall a, b, x R:
         $FnLb(f, a)
         $FnLb(g, b)
         =>:
-            $FnLb(fn(x R: f(x) + g(x)), a + b)
+            a + b <= f(x) + g(x)
     prove:
-        do_nothing
+        forall x R:
+            =>:
+                a <= f(x)
+                b <= g(x)
+                a + g(x) <= f(x) + g(x)
+                a + b <= a + g(x)
+                a + b <= f(x) + g(x)
 
 claim:
-    forall f, g fn(R) R, a, b R:
+    forall a, b, x R:
         $FnLb(f, 0)
         $FnLb(g, 0)
         =>:
-            $FnLb(fn(x R: f(x) * g(x)), 0)
+            f(x) * g(x) >= 0
     prove:
-        do_nothing
+        f(x) >= 0
+        g(x) >= 0
+        f(x) * g(x) >= 0 * g(x)
+        0 * g(x) = 0
+        f(x) * g(x) >= 0
 
 claim:
-    forall f, g fn(R) R, a, b R:
+    forall a, b, x R:
         $FnUb(f, a)
         $FnUb(g, b)
         $FnLb(g, 0)
         0 <= a
         =>:
-            $FnUb(fn(x R: f(x) * g(x)), a * b)
+            f(x) * g(x) <= a * b
     prove:
-        do_nothing
+        f(x) <= a
+        g(x) <= b
+        g(x) >= 0
+        g(x) > 0 or g(x) = 0
+        a > 0 or a = 0
+        cases:
+            =>:
+                a * g(x) <= a * b
+            case a > 0:
+                a * g(x) <= a * b
+            case a = 0:
+                a * g(x) = 0 = a * b
+                a * g(x) <= a * b
+        cases:
+            =>:
+                f(x) * g(x) <= a * b
+            case g(x) > 0:
+                f(x) * g(x) <= a * g(x)
+                a * g(x) <= a * b
+                f(x) * g(x) <= a * b
+            case g(x) = 0:
+                f(x) * g(x) = 0
+                a * g(x) = 0
+                f(x) * g(x) <= a * g(x)
+                a * g(x) <= a * b
+                f(x) * g(x) <= a * b
+        f(x) * g(x) <= a * b
+
+
+
+#---------------TODO---------------
 
 # section: generic alpha, R with ordered commutative monoid structure
 
