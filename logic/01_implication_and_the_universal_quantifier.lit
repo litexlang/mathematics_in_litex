@@ -1,5 +1,6 @@
 # 3.1 Implication and the Universal Quantifier
 
+# #check
 claim:
     forall x R:
         0 <= x
@@ -8,6 +9,61 @@ claim:
     prove:
         do_nothing
 
+# #check
+claim:
+    forall x, y, epsilon R:
+        0 < epsilon
+        epsilon <= 1
+        abs(x) < epsilon
+        abs(y) < epsilon
+        =>:
+            abs(x * y) < epsilon
+    prove:
+        do_nothing
+
+# theorem my_lemma
+claim:
+    forall x, y, epsilon R:
+        0 < epsilon
+        epsilon <= 1
+        abs(x) < epsilon
+        abs(y) < epsilon
+        =>:
+            abs(x * y) < epsilon
+    prove:
+        do_nothing
+
+# section: a, b, delta R; 0 < delta; delta <= 1; abs(a) < delta; abs(b) < delta
+# #check my_lemma a b delta; #check partial application; #check full application
+
+# theorem my_lemma2
+claim:
+    forall x, y, epsilon R:
+        0 < epsilon
+        epsilon <= 1
+        abs(x) < epsilon
+        abs(y) < epsilon
+        =>:
+            abs(x * y) < epsilon
+    prove:
+        do_nothing
+
+# section: implicit arguments as above
+# #check my_lemma2 with hypotheses
+
+# theorem my_lemma3
+claim:
+    forall x, y, epsilon R:
+        0 < epsilon
+        epsilon <= 1
+        abs(x) < epsilon
+        abs(y) < epsilon
+        =>:
+            abs(x * y) < epsilon
+    prove:
+        do_nothing
+
+# theorem my_lemma4
 claim:
     forall x, y, epsilon R:
         0 < epsilon
@@ -46,3 +102,292 @@ claim:
                 abs(x * y) = abs(x) * abs(y) = 0 * abs(y) = 0
                 0 < epsilon
                 abs(x * y) < epsilon
+
+have f fn(R) R
+
+prop FnUb(f fn(R) R, a R):
+    forall x R: f(x) <= a
+
+prop FnLb(f fn(R) R, a R):
+    forall x R: a <= f(x)
+
+claim:
+    forall f, g fn(R) R, a, b R:
+        $FnUb(f, a)
+        $FnUb(g, b)
+        =>:
+            $FnUb(fn(x R: f(x) + g(x)), a + b)
+    prove:
+        forall x R:
+            f(x) + g(x) <= a + b
+        f(x) <= a
+        g(x) <= b
+        add_le_add
+        $FnUb(f, a)
+        $FnUb(g, b)
+
+claim:
+    forall f, g fn(R) R, a, b R:
+        $FnLb(f, a)
+        $FnLb(g, b)
+        =>:
+            $FnLb(fn(x R: f(x) + g(x)), a + b)
+    prove:
+        do_nothing
+
+claim:
+    forall f, g fn(R) R, a, b R:
+        $FnLb(f, 0)
+        $FnLb(g, 0)
+        =>:
+            $FnLb(fn(x R: f(x) * g(x)), 0)
+    prove:
+        do_nothing
+
+claim:
+    forall f, g fn(R) R, a, b R:
+        $FnUb(f, a)
+        $FnUb(g, b)
+        $FnLb(g, 0)
+        0 <= a
+        =>:
+            $FnUb(fn(x R: f(x) * g(x)), a * b)
+    prove:
+        do_nothing
+
+# section: generic alpha, R with ordered commutative monoid structure
+
+prop FnUb_gen(f fn(alpha) R, a R):
+    forall x alpha: f(x) <= a
+
+claim:
+    forall f, g fn(alpha) R, a, b R:
+        $FnUb_gen(f, a)
+        $FnUb_gen(g, b)
+        =>:
+            $FnUb_gen(fn(x alpha: f(x) + g(x)), a + b)
+    prove:
+        forall x alpha:
+            f(x) + g(x) <= a + b
+        add_le_add(f(x), g(x), a, b)
+        $FnUb_gen(f, a)
+        $FnUb_gen(g, b)
+
+prop Monotone(f fn(R) R):
+    forall a, b R:
+        a <= b
+        =>:
+            f(a) <= f(b)
+
+# example: Monotone is exactly the hypothesis forall a b, a <= b -> f a <= f b
+claim:
+    forall f fn(R) R:
+        $Monotone(f)
+        =>:
+            forall a, b R:
+                a <= b
+                =>:
+                    f(a) <= f(b)
+    prove:
+        $Monotone(f)
+
+claim:
+    forall f, g fn(R) R:
+        $Monotone(f)
+        $Monotone(g)
+        =>:
+            $Monotone(fn(x R: f(x) + g(x)))
+    prove:
+        forall a, b R:
+            a <= b
+            f(a) + g(a) <= f(b) + g(b)
+        add_le_add(f(a), g(a), f(b), g(b))
+        $Monotone(f)
+        $Monotone(g)
+
+claim:
+    forall f, g fn(R) R:
+        $Monotone(f)
+        $Monotone(g)
+        =>:
+            $Monotone(fn(x R: f(x) + g(x)))
+    prove:
+        forall a, b R:
+            a <= b
+            =>:
+                f(a) + g(a) <= f(b) + g(b)
+        forall a, b R:
+            a <= b
+            =>:
+                f(a) <= f(b)
+        forall a, b R:
+            a <= b
+            =>:
+                g(a) <= g(b)
+        add_le_add
+
+claim:
+    forall c R, f fn(R) R:
+        $Monotone(f)
+        0 <= c
+        =>:
+            $Monotone(fn(x R: c * f(x)))
+    prove:
+        do_nothing
+
+claim:
+    forall f, g fn(R) R:
+        $Monotone(f)
+        $Monotone(g)
+        =>:
+            $Monotone(fn(x R: f(g(x))))
+    prove:
+        do_nothing
+
+prop FnEven(f fn(R) R):
+    forall x R: f(x) = f(-x)
+
+prop FnOdd(f fn(R) R):
+    forall x R: f(x) = -f(-x)
+
+claim:
+    forall f, g fn(R) R:
+        $FnEven(f)
+        $FnEven(g)
+        =>:
+            $FnEven(fn(x R: f(x) + g(x)))
+    prove:
+        forall x R:
+            f(x) + g(x) = f(-x) + g(-x)
+        $FnEven(f)
+        $FnEven(g)
+
+claim:
+    forall f, g fn(R) R:
+        $FnOdd(f)
+        $FnOdd(g)
+        =>:
+            $FnEven(fn(x R: f(x) * g(x)))
+    prove:
+        do_nothing
+
+claim:
+    forall f, g fn(R) R:
+        $FnEven(f)
+        $FnOdd(g)
+        =>:
+            $FnOdd(fn(x R: f(x) * g(x)))
+    prove:
+        do_nothing
+
+claim:
+    forall f, g fn(R) R:
+        $FnEven(f)
+        $FnOdd(g)
+        =>:
+            $FnEven(fn(x R: f(g(x))))
+    prove:
+        do_nothing
+
+# section: subsets of a type alpha
+
+have alpha nonempty_set
+
+prop Subset(r, s set(alpha)):
+    forall x alpha:
+        x in r
+        =>:
+            x in s
+
+claim:
+    forall s set(alpha):
+        $Subset(s, s)
+    prove:
+        forall x alpha:
+            x in s
+            =>:
+                x in s
+
+# theorem Subset.refl
+claim:
+    forall s set(alpha):
+        $Subset(s, s)
+    prove:
+        forall x alpha:
+            x in s
+            =>:
+                x in s
+
+# theorem Subset.trans
+claim:
+    forall r, s, t set(alpha):
+        $Subset(r, s)
+        $Subset(s, t)
+        =>:
+            $Subset(r, t)
+    prove:
+        do_nothing
+
+# section: partial order on alpha; s a subset of alpha; a, b in alpha
+
+prop SetUb(s set(alpha), a alpha):
+    forall x alpha:
+        x in s
+        =>:
+            x <= a
+
+# alpha carries a partial order (so <= is transitive on alpha)
+claim:
+    forall s set(alpha), a, b alpha:
+        $SetUb(s, a)
+        a <= b
+        =>:
+            $SetUb(s, b)
+    prove:
+        forall x alpha:
+            x in s
+            =>:
+                x <= a
+        forall x alpha:
+            x in s
+            =>:
+                x <= b
+        le_trans
+
+# section: injectivity
+
+have beta nonempty_set
+have gamma nonempty_set
+
+prop Injective(f fn(alpha) beta):
+    forall x1, x2 alpha:
+        f(x1) = f(x2)
+        =>:
+            x1 = x2
+
+claim:
+    forall c R:
+        $Injective(fn(x R: x + c))
+    prove:
+        forall x1, x2 R:
+            x1 + c = x2 + c
+            =>:
+                x1 = x2
+        add_left_inj(c)
+
+claim:
+    forall c R:
+        c != 0
+        =>:
+            $Injective(fn(x R: c * x))
+    prove:
+        do_nothing
+
+claim:
+    forall f fn(alpha) beta, g fn(beta) gamma:
+        $Injective(g)
+        $Injective(f)
+        =>:
+            $Injective(fn(x alpha: g(f(x))))
+    prove:
+        do_nothing
