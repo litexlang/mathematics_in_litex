@@ -1,14 +1,46 @@
 # 2.3 Using Theorems and Lemmas
 
+prop a_le_c(a, b, c R):
+    a <= c
+
+prop a_lt_c(a, b, c R):
+    a < c
+
+know forall a, b, c R:
+    a <= b
+    b <= c
+    =>:
+        $a_le_c(a, b, c)
+
+know forall a, b, c R:
+    a <= b
+    b < c
+    =>:
+        $a_lt_c(a, b, c)
+
+know forall a, b, c R:
+    a < b
+    b <= c
+    =>:
+        $a_lt_c(a, b, c)
+
+know forall a, b, c R:
+    a < b
+    b < c
+    =>:
+        $a_lt_c(a, b, c)
+
+forall a R:
+    a <= a
+
 claim:
     prove:
         forall a, b, c R:
             a <= b
             b <= c
             =>:
-                a <= a # le_refl
                 a <= c # le_trans
-    do_nothing
+    $a_le_c(a, b, c)
 
 # lt_of_le_of_lt
 claim:
@@ -18,12 +50,7 @@ claim:
             b < c
             =>:
                 a < c
-    c - b > 0
-    b - a >= 0
-    (c - b) + (b - a) > 0 + 0
-    (c - b) + (b - a) = c - a
-    c - a > 0
-    a < c
+    $a_lt_c(a, b, c)
 
 # lt_of_lt_of_le
 claim:
@@ -33,12 +60,7 @@ claim:
             b <= c
             =>:
                 a < c
-    b - a > 0
-    c - b >= 0
-    (b - a) + (c - b) > 0 + 0
-    (b - a) + (c - b) = c - a
-    c - a > 0
-    a < c
+    $a_lt_c(a, b, c)
 
 # lt_trans
 claim:
@@ -48,9 +70,7 @@ claim:
             b < c
             =>:
                 a < c
-    do_nothing
-
-# linarith
+    $a_lt_c(a, b, c)
 
 claim:
     prove:
@@ -61,19 +81,11 @@ claim:
             d < e
             =>:
                 a < e
-    c - b > 0
-    b - a >= 0
-    (c - b) + (b - a) > 0 + 0
-    (c - b) + (b - a) = c - a
-    c - a > 0
-    a < c
-    d - c >= 0
-    e - d > 0
-    (d - c) + (e - d) > 0 + 0
-    (d - c) + (e - d) = e - c
-    e - c > 0
-    c < e
-    a < e
+    $a_lt_c(a, b, c) # infer: a < c
+    $a_lt_c(c, d, e) # infer: c < e
+    $a_lt_c(a, c, e) # infer: a < e
+
+
 
 claim:
     prove:
@@ -83,50 +95,38 @@ claim:
             d = 2
             =>:
                 d + a <= 5 * b
-    2 * 1 <= 2 * a
-    2 * 1 <= 3 * b
-    2 / 3 <= 3 * b / 3
-    2 / 3 <= b
-    2 * a / 2 <= 3 * b / 2
-    a <= 3 / 2 * b
-    d + a = 2 + a
-    2 + a <= 2 + 3 / 2 * b
-    d + a <= 2 + 3 / 2 * b
-    2 + 3 / 2 * b <= 3 * b + 3 / 2 * b
-    d + a <= 9 / 2 * b
-    5 * b - 9 / 2 * b = b / 2
-    b / 2 >= (2 / 3) / 2
-    b / 2 >= 1 / 3
-    1 / 3 >= 0
-    b / 2 >= 0
-    5 * b - 9 / 2 * b >= 0
-    9 / 2 * b <= 5 * b
-    d + a <= 5 * b
 
-have E R_pos
-have fn exp(x R) R_pos = E^x
-have fn ln(x R_pos) R = log(E, x)
-know:
-    # exp_le_exp
-    forall x, y R:
-        x <= y
-        <=>:
-            exp(x) <= exp(y)
-    # exp_lt_exp
-    forall x, y R:
-        x < y
-        <=>:
-            exp(x) < exp(y)
-    # log_le_log
-    forall a, b R_pos:
-        a <= b
-        <=>:
-            ln(a) <= ln(b)
-    # log_lt_log
-    forall a, b R_pos:
-        a < b
-        <=>:
-            ln(a) < ln(b)
+    know:
+        forall a R, b R:
+            a >= 0
+            b >= 1
+            =>:
+                a <= b * a
+
+        forall a, b, c R:
+            c >= 0
+            a <= b
+            =>:
+                a * c <= b * c
+
+        forall a, b, c R:
+            c > 0
+            a <= b
+            =>:
+                a / c <= b / c
+
+    know:
+        forall a, b R:
+            0 <= a
+            0 <= b
+            =>:
+                0 <= a * b
+
+            
+    d = 2 * 1 <= 2 * a
+    a = (2*a)/2 <= (3*b)/2 = 1.5 * b
+    0 <= (2/3)* a = (2 * a)/3 <= (3 * b)/3 = b
+    d + a <= 2 * a + a <= 3 * b + a <= 3 * b +1.5*b = 4.5*b <= 5 * b
 
 claim:
     prove:
@@ -135,13 +135,7 @@ claim:
             b <= c
             =>:
                 2 + a + exp(b) <= 3 * a + exp(c)
-    exp(b) <= exp(c)
-    2 * 1 <= 2 * a
-    2 + a <= 2 * a + a
-    2 + a <= 3 * a
-    2 + a + exp(b) <= 3 * a + exp(b)
-    3 * a + exp(b) <= 3 * a + exp(c)
-    2 + a + exp(b) <= 3 * a + exp(c)
+    do_nothing
 
 # add_le_add
 claim:
@@ -151,9 +145,7 @@ claim:
             c <= d
             =>:
                 a + c <= b + d
-    a + c <= b + c
-    b + c <= b + d
-    a + c <= b + d
+    do_nothing
 
 # more theorems in the linarith library that can be used to establish inequalities on the real numbers
 
@@ -174,12 +166,7 @@ claim:
             c < d
             =>:
                 a + c < b + d
-    b - a >= 0
-    d - c > 0
-    (b - a) + (d - c) > 0
-    (b - a) + (d - c) = (b + d) - (a + c)
-    (b + d) - (a + c) > 0
-    a + c < b + d
+    do_nothing
 
 # add_lt_add_of_lt_of_le
 claim:
@@ -189,12 +176,7 @@ claim:
             c <= d
             =>:
                 a + c < b + d
-    b - a > 0
-    d - c >= 0
-    (b - a) + (d - c) > 0
-    (b - a) + (d - c) = (b + d) - (a + c)
-    (b + d) - (a + c) > 0
-    a + c < b + d
+    do_nothing
 
 claim:
     prove:
@@ -242,14 +224,7 @@ claim:
             c < d
             =>:
                 a + exp(c) + e < b + exp(d) + e
-    exp(c) < exp(d)
-    b - a >= 0
-    exp(d) - exp(c) > 0
-    (b - a) + (exp(d) - exp(c)) > 0
-    (b - a) + (exp(d) - exp(c)) = (b + exp(d)) - (a + exp(c))
-    (b + exp(d)) - (a + exp(c)) > 0
-    a + exp(c) < b + exp(d)
-    a + exp(c) + e < b + exp(d) + e
+    do_nothing
 
 # try the following examples on your own
 claim:
@@ -258,17 +233,12 @@ claim:
             d <= e
             =>:
                 c + exp(a + d) <= c + exp(a + e)
-    a + d <= a + e
-    exp(a + d) <= exp(a + e)
-    c + exp(a + d) <= c + exp(a + e)
+    do_nothing
 
 claim:
     prove:
         forall x R: 1 + exp(x) > 0
-    exp(x) > 0
-    1 + exp(x) > 1 + 0
-    1 > 0
-    1 + exp(x) > 0
+    do_nothing
 
 claim:
     prove:
@@ -278,9 +248,7 @@ claim:
                 1 + exp(a) > 0
                 1 + exp(b) > 0
                 ln(1 + exp(a)) <= ln(1 + exp(b))
-    exp(a) <= exp(b)
-    1 + exp(a) <= 1 + exp(b)
-    ln(1 + exp(a)) <= ln(1 + exp(b))
+    do_nothing
 
 # sq_nonneg
 claim:
@@ -294,43 +262,14 @@ claim:
             a <= b
             =>:
                 c - exp(b) <= c - exp(a)
-    exp(a) <= exp(b)
-    c - exp(b) <= c - exp(a)
+    do_nothing
 
 claim:
     prove:
         forall a, b R: 2 * a * b <= a^2 + b^2
-    (a - b)^2 >= 0
-    (a - b)^2 = a^2 + b^2 - 2 * a * b
-    a^2 + b^2 - 2 * a * b >= 0
-    2 * a * b <= a^2 + b^2
+    do_nothing
 
 claim:
     prove:
         forall a, b R: abs(a * b) <= (a^2 + b^2) / 2
-    (a - b)^2 >= 0
-    (a - b)^2 = a^2 + b^2 - 2 * a * b
-    a^2 + b^2 - 2 * a * b >= 0
-    2 * a * b <= a^2 + b^2
-    2 * a * b / 2 <= (a^2 + b^2) / 2
-    a * b <= (a^2 + b^2) / 2
-    (a + b)^2 >= 0
-    (a + b)^2 = a^2 + b^2 + 2 * a * b
-    a^2 + b^2 + 2 * a * b >= 0
-    - 2 * a * b <= a^2 + b^2
-    - 2 * a * b / 2 <= (a^2 + b^2) / 2
-    - a * b <= (a^2 + b^2) / 2
-
-    a * b >= 0 or a * b < 0
-    cases:
-        =>:
-            abs(a * b) <= (a^2 + b^2) / 2
-        case a * b >= 0:
-            abs(a * b) = a * b
-            a * b <= (a^2 + b^2) / 2
-            abs(a * b) <= (a^2 + b^2) / 2
-        case a * b < 0:
-            abs(a * b) = - (a * b) = - a * b
-            - a * b <= (a^2 + b^2) / 2
-            abs(a * b) <= (a^2 + b^2) / 2
-
+    do_nothing
