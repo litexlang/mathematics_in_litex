@@ -1,6 +1,6 @@
 # proving identities in algebraic structures
 
-prop is_ring(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r):
+prop is_ring(r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r):
     forall a, b, c r:
         add(add(a, b), c) = add(a, add(b, c))
         mul(mul(a, b), c) = mul(a, mul(b, c))
@@ -13,170 +13,170 @@ prop is_ring(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r
         add(a, neg(a)) = add(neg(a), a) = zero
         mul(a, e) = mul(e, a) = a
     
-prop is_commring(r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r):
+prop is_commring(r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r):
     $is_ring(r, add, mul, e, zero, neg)
     forall a, b r:
         mul(a, b) = mul(b, a)
 
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b, c r:
-        $is_commring(r, add, mul, e, zero, neg)
-        =>:
-            mul(mul(c, b), a) = mul(b, mul(a, c))
-            mul(add(a, b), add(a, b)) = add(add(mul(a, a), add(mul(a, b), mul(a, b))), mul(b, b))
-            mul(add(a, b), add(a, neg(b))) = add(mul(a, a), neg(mul(b, b)))
     prove:
-        $is_ring(r, add, mul, e, zero, neg)
-        mul(mul(c, b), a) = mul(mul(b, c), a) = mul(b, mul(c, a)) = mul(b, mul(a, c))
-        mul(add(a, b), add(a, b)) = add(mul(add(a, b), a), mul(add(a, b), b)) = add(add(mul(a, a), mul(b, a)), add(mul(a, b), mul(b, b))) = add(mul(a, a), add(mul(b, a), add(mul(a, b), mul(b, b)))) = add(mul(a, a), add(add(mul(b, a), mul(a, b)), mul(b, b))) = add(add(mul(a, a), add(mul(a, b), mul(a, b))), mul(b, b))
-        mul(add(a, b), add(a, neg(b))) = add(mul(a, add(a, neg(b))), mul(b, add(a, neg(b)))) = add(add(mul(a, a), mul(a, neg(b))), add(mul(b, a), mul(b, neg(b)))) = add(add(mul(a, a), mul(a, neg(b))), add(mul(a, b), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, neg(b)), add(mul(a, b), mul(b, neg(b))))) = add(mul(a, a), add(add(mul(a, neg(b)), mul(a, b)), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, add(b, neg(b))), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, zero), mul(b, neg(b))))
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b, c r:
+            $is_commring(r, add, mul, e, zero, neg)
+            =>:
+                mul(mul(c, b), a) = mul(b, mul(a, c))
+                mul(add(a, b), add(a, b)) = add(add(mul(a, a), add(mul(a, b), mul(a, b))), mul(b, b))
+                mul(add(a, b), add(a, neg(b))) = add(mul(a, a), neg(mul(b, b)))
+    $is_ring(r, add, mul, e, zero, neg)
+    mul(mul(c, b), a) = mul(mul(b, c), a) = mul(b, mul(c, a)) = mul(b, mul(a, c))
+    mul(add(a, b), add(a, b)) = add(mul(add(a, b), a), mul(add(a, b), b)) = add(add(mul(a, a), mul(b, a)), add(mul(a, b), mul(b, b))) = add(mul(a, a), add(mul(b, a), add(mul(a, b), mul(b, b)))) = add(mul(a, a), add(add(mul(b, a), mul(a, b)), mul(b, b))) = add(add(mul(a, a), add(mul(a, b), mul(a, b))), mul(b, b))
+    mul(add(a, b), add(a, neg(b))) = add(mul(a, add(a, neg(b))), mul(b, add(a, neg(b)))) = add(add(mul(a, a), mul(a, neg(b))), add(mul(b, a), mul(b, neg(b)))) = add(add(mul(a, a), mul(a, neg(b))), add(mul(a, b), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, neg(b)), add(mul(a, b), mul(b, neg(b))))) = add(mul(a, a), add(add(mul(a, neg(b)), mul(a, b)), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, add(b, neg(b))), mul(b, neg(b)))) = add(mul(a, a), add(mul(a, zero), mul(b, neg(b))))
 
-        mul(a, zero) = mul(a, add(zero, zero)) = add(mul(a, zero), mul(a, zero))
-        zero = add(neg(mul(a, zero)), mul(a, zero)) = add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(add(neg(mul(a, zero)), mul(a, zero)), mul(a, zero)) = add(0, mul(a, zero)) = mul(a, zero)
+    mul(a, zero) = mul(a, add(zero, zero)) = add(mul(a, zero), mul(a, zero))
+    zero = add(neg(mul(a, zero)), mul(a, zero)) = add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(add(neg(mul(a, zero)), mul(a, zero)), mul(a, zero)) = add(0, mul(a, zero)) = mul(a, zero)
 
-        mul(b, neg(b)) = add(mul(b, neg(b)), zero) = add(mul(b, neg(b)), add(mul(b, b), neg(mul(b, b)))) = add(add(mul(b, neg(b)), mul(b, b)), neg(mul(b, b))) = add(mul(b, add(neg(b), b)), neg(mul(b, b))) = add(mul(b, zero), neg(mul(b, b))) = add(zero, neg(mul(b, b))) = neg(mul(b, b))
+    mul(b, neg(b)) = add(mul(b, neg(b)), zero) = add(mul(b, neg(b)), add(mul(b, b), neg(mul(b, b)))) = add(add(mul(b, neg(b)), mul(b, b)), neg(mul(b, b))) = add(mul(b, add(neg(b), b)), neg(mul(b, b))) = add(mul(b, zero), neg(mul(b, b))) = add(zero, neg(mul(b, b))) = neg(mul(b, b))
 
-        mul(add(a, b), add(a, neg(b))) = add(mul(a, a), add(mul(a, zero), mul(b, neg(b)))) = add(mul(a, a), add(zero, mul(b, neg(b)))) = add(mul(a, a), mul(b, neg(b))) = add(mul(a, a), neg(mul(b, b)))
+    mul(add(a, b), add(a, neg(b))) = add(mul(a, a), add(mul(a, zero), mul(b, neg(b)))) = add(mul(a, a), add(zero, mul(b, neg(b)))) = add(mul(a, a), mul(b, neg(b))) = add(mul(a, a), neg(mul(b, b)))
 
 
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b, c, d r:
-        $is_commring(r, add, mul, e, zero, neg)
-        c = add(mul(d, a), b)
-        b = mul(a, d)
-        =>:
-            c = add(mul(a, d), mul(a, d))
     prove:
-        $is_ring(r, add, mul, e, zero, neg)
-        c = add(mul(d, a), b) = add(mul(d, a), mul(a, d)) = add(mul(a, d), mul(a, d))
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b, c, d r:
+            $is_commring(r, add, mul, e, zero, neg)
+            c = add(mul(d, a), b)
+            b = mul(a, d)
+            =>:
+                c = add(mul(a, d), mul(a, d))
+    $is_ring(r, add, mul, e, zero, neg)
+    c = add(mul(d, a), b) = add(mul(d, a), mul(a, d)) = add(mul(a, d), mul(a, d))
 
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b r:
-        $is_ring(r, add, mul, e, zero, neg)
-        =>:
-            add(neg(a), add(a, b)) = b # theorem neg_add_cancel_left
-            add(add(a, b), neg(b)) = a # theoroem add_neg_cancel_right
     prove:
-        add(neg(a), add(a, b)) = add(add(neg(a), a), b) = add(zero, b) = b
-        add(add(a, b), neg(b)) = add(a, add(b, neg(b))) = add(a, zero) = a
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b r:
+            $is_ring(r, add, mul, e, zero, neg)
+            =>:
+                add(neg(a), add(a, b)) = b # theorem neg_add_cancel_left
+                add(add(a, b), neg(b)) = a # theoroem add_neg_cancel_right
+    add(neg(a), add(a, b)) = add(add(neg(a), a), b) = add(zero, b) = b
+    add(add(a, b), neg(b)) = add(a, add(b, neg(b))) = add(a, zero) = a
 
 # theorem add_left_cancel
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b, c r:
-        $is_ring(r, add, mul, e, zero, neg)
-        add(a, b) = add(a, c)
-        =>:
-            b = c
     prove:
-        add(neg(a), add(a, b)) = add(neg(a), add(a, c))
-        add(neg(a), add(a, b)) = add(add(neg(a), a), b) = add(zero, b) = b
-        add(neg(a), add(a, c)) = add(add(neg(a), a), c) = add(zero, c) = c
-        b = c
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b, c r:
+            $is_ring(r, add, mul, e, zero, neg)
+            add(a, b) = add(a, c)
+            =>:
+                b = c
+    add(neg(a), add(a, b)) = add(neg(a), add(a, c))
+    add(neg(a), add(a, b)) = add(add(neg(a), a), b) = add(zero, b) = b
+    add(neg(a), add(a, c)) = add(add(neg(a), a), c) = add(zero, c) = c
+    b = c
 
 # theorem add_right_cancel
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b, c r:
-        $is_ring(r, add, mul, e, zero, neg)
-        add(a, b) = add(c, b)
-        =>:
-            a = c
     prove:
-        add(add(a, b), neg(b)) = add(add(c, b), neg(b))
-        add(add(a, b), neg(b)) = add(a, add(b, neg(b))) = add(a, zero) = a
-        add(add(c, b), neg(b)) = add(c, add(b, neg(b))) = add(c, zero) = c
-        a = c
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b, c r:
+            $is_ring(r, add, mul, e, zero, neg)
+            add(a, b) = add(c, b)
+            =>:
+                a = c
+    add(add(a, b), neg(b)) = add(add(c, b), neg(b))
+    add(add(a, b), neg(b)) = add(a, add(b, neg(b))) = add(a, zero) = a
+    add(add(c, b), neg(b)) = add(c, add(b, neg(b))) = add(c, zero) = c
+    a = c
 
 # theorem mul_zero
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a r:
-        $is_ring(r, add, mul, e, zero, neg)
-        =>:
-            mul(a, zero) = zero
     prove:
-        add(mul(a, zero), mul(a, zero)) = mul(a, add(zero, zero)) = mul(a, zero) = add(mul(a, zero), zero)
-        add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(neg(mul(a, zero)), add(mul(a, zero), zero))
-        add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(add(neg(mul(a, zero)), mul(a, zero)), mul(a, zero)) = add(zero, mul(a, zero)) = mul(a, zero)
-        add(neg(mul(a, zero)), add(mul(a, zero), zero)) = add(add(neg(mul(a, zero)), mul(a, zero)), zero) = add(zero, zero) = zero
-        mul(a, zero) = zero
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a r:
+            $is_ring(r, add, mul, e, zero, neg)
+            =>:
+                mul(a, zero) = zero
+    add(mul(a, zero), mul(a, zero)) = mul(a, add(zero, zero)) = mul(a, zero) = add(mul(a, zero), zero)
+    add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(neg(mul(a, zero)), add(mul(a, zero), zero))
+    add(neg(mul(a, zero)), add(mul(a, zero), mul(a, zero))) = add(add(neg(mul(a, zero)), mul(a, zero)), mul(a, zero)) = add(zero, mul(a, zero)) = mul(a, zero)
+    add(neg(mul(a, zero)), add(mul(a, zero), zero)) = add(add(neg(mul(a, zero)), mul(a, zero)), zero) = add(zero, zero) = zero
+    mul(a, zero) = zero
 
 # theorem zero_mul
 # remember that multiplication is not assumed to be commutative
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a r:
-        $is_ring(r, add, mul, e, zero, neg)
-        =>:
-            mul(zero, a) = zero
     prove:
-        add(mul(zero, a), mul(zero, a)) = mul(add(zero, zero), a) = mul(zero, a) = add(mul(zero, a), zero)
-        add(neg(mul(zero, a)), add(mul(zero, a), mul(zero, a))) = add(neg(mul(zero, a)), add(mul(zero, a), zero))
-        add(neg(mul(zero, a)), add(mul(zero, a), mul(zero, a))) = add(add(neg(mul(zero, a)), mul(zero, a)), mul(zero, a)) = add(zero, mul(zero, a)) = mul(zero, a)
-        add(neg(mul(zero, a)), add(mul(zero, a), zero)) = add(add(neg(mul(zero, a)), mul(zero, a)), zero) = add(zero, zero) = zero
-        mul(zero, a) = zero
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a r:
+            $is_ring(r, add, mul, e, zero, neg)
+            =>:
+                mul(zero, a) = zero
+    add(mul(zero, a), mul(zero, a)) = mul(add(zero, zero), a) = mul(zero, a) = add(mul(zero, a), zero)
+    add(neg(mul(zero, a)), add(mul(zero, a), mul(zero, a))) = add(neg(mul(zero, a)), add(mul(zero, a), zero))
+    add(neg(mul(zero, a)), add(mul(zero, a), mul(zero, a))) = add(add(neg(mul(zero, a)), mul(zero, a)), mul(zero, a)) = add(zero, mul(zero, a)) = mul(zero, a)
+    add(neg(mul(zero, a)), add(mul(zero, a), zero)) = add(add(neg(mul(zero, a)), mul(zero, a)), zero) = add(zero, zero) = zero
+    mul(zero, a) = zero
 
 # theorem neg_eq_of_add_eq_zero
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b r:
-        $is_ring(r, add, mul, e, zero, neg)
-        add(a, b) = zero
-        =>:
-            neg(a) = b
     prove:
-        add(a, b) = zero = add(a, neg(a))
-        add(neg(a), add(a, b)) = add(neg(a), add(a, neg(a)))
-        add(neg(a), add(a, b)) = add(add(neg(a), a), b) = add(zero, b) = b
-        add(neg(a), add(a, neg(a))) = add(neg(a), zero) = neg(a)
-        neg(a) = b
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b r:
+            $is_ring(r, add, mul, e, zero, neg)
+            add(a, b) = zero
+            =>:
+                neg(a) = b
+    add(a, b) = zero = add(a, neg(a))
+    add(neg(a), add(a, b)) = add(neg(a), add(a, neg(a)))
+    add(neg(a), add(a, b)) = add(add(neg(a), a), b) = add(zero, b) = b
+    add(neg(a), add(a, neg(a))) = add(neg(a), zero) = neg(a)
+    neg(a) = b
 
 # theorem eq_neg_of_add_eq_zero
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a, b r:
-        $is_ring(r, add, mul, e, zero, neg)
-        add(a, b) = zero
-        =>:
-            a = neg(b)
     prove:
-        add(add(a, b), neg(b)) = add(zero, neg(b)) = neg(b)
-        add(add(a, b), neg(b)) = add(a, add(b, neg(b))) = add(a, zero) = a
-        a = neg(b)
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a, b r:
+            $is_ring(r, add, mul, e, zero, neg)
+            add(a, b) = zero
+            =>:
+                a = neg(b)
+    add(add(a, b), neg(b)) = add(zero, neg(b)) = neg(b)
+    add(add(a, b), neg(b)) = add(a, add(b, neg(b))) = add(a, zero) = a
+    a = neg(b)
 
 # theorem neg_zero
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r:
-        $is_ring(r, add, mul, e, zero, neg)
-        =>:
-            neg(zero) = zero
     prove:
-        add(zero, zero) = zero
-        add(neg(zero), add(zero, zero)) = add(neg(zero), zero)
-        add(neg(zero), add(zero, zero)) = add(add(neg(zero), zero), zero) = add(zero, zero) = zero
-        add(neg(zero), zero) = neg(zero)
-        neg(zero) = zero
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r:
+            $is_ring(r, add, mul, e, zero, neg)
+            =>:
+                neg(zero) = zero
+    add(zero, zero) = zero
+    add(neg(zero), add(zero, zero)) = add(neg(zero), zero)
+    add(neg(zero), add(zero, zero)) = add(add(neg(zero), zero), zero) = add(zero, zero) = zero
+    add(neg(zero), zero) = neg(zero)
+    neg(zero) = zero
 
 # theorem neg_neg
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, a r:
-        $is_ring(r, add, mul, e, zero, neg)
-        =>:
-            neg(neg(a)) = a
     prove:
-        add(neg(neg(a)), neg(a)) = zero
-        add(add(neg(neg(a)), neg(a)), a) = add(zero, a) = a
-        add(add(neg(neg(a)), neg(a)), a) = add(neg(neg(a)), add(neg(a), a)) = add(neg(neg(a)), zero) = neg(neg(a))
-        neg(neg(a)) = a
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, a r:
+            $is_ring(r, add, mul, e, zero, neg)
+            =>:
+                neg(neg(a)) = a
+    add(neg(neg(a)), neg(a)) = zero
+    add(add(neg(neg(a)), neg(a)), a) = add(zero, a) = a
+    add(add(neg(neg(a)), neg(a)), a) = add(neg(neg(a)), add(neg(a), a)) = add(neg(neg(a)), zero) = neg(neg(a))
+    neg(neg(a)) = a
 
 # theorem two_mul
 claim:
-    forall r nonempty_set, add fn(r, r)r, mul fn(r, r)r, e r, zero r, neg fn(r)r, two r, a r:
-        $is_ring(r, add, mul, e, zero, neg)
-        two = add(e, e) # theorem one_add_one_eq_two
-        # perhaps we need algo or some king of mapping from N to an arbitrary ring, so we temporarily turn `theorem one_add_one_eq_two` into some definition
-        =>:
-            mul(two, a) = add(a, a)
     prove:
-        mul(two, a) = mul(add(e, e), a) = add(mul(e, a), mul(e, a)) = add(a, a)
+        forall r nonempty_set, add Fn(r, r)r, mul Fn(r, r)r, e r, zero r, neg Fn(r)r, two r, a r:
+            $is_ring(r, add, mul, e, zero, neg)
+            two = add(e, e) # theorem one_add_one_eq_two
+            # perhaps we need algo or some king of mapping from N to an arbitrary ring, so we temporarily turn `theorem one_add_one_eq_two` into some definition
+            =>:
+                mul(two, a) = add(a, a)
+    mul(two, a) = mul(add(e, e), a) = add(mul(e, a), mul(e, a)) = add(a, a)
 
 # "the weaker notion of a group"
-prop is_group(s set, mul fn(s, s)s, inv fn(s)s, e s):
+prop is_group(s set, mul Fn(s, s)s, inv Fn(s)s, e s):
     forall x s, y s, z s:
         mul(mul(x, y), z) = mul(x, mul(y, z)) # mul_assoc
     forall x s:
@@ -186,27 +186,27 @@ prop is_group(s set, mul fn(s, s)s, inv fn(s)s, e s):
 
 # proving facts about groups using only axioms stated above
 claim:
-    forall s set, mul fn(s, s)s, inv fn(s)s, e s, a, b s:
-        $is_group(s, mul, inv, e)
-        =>:
-            mul(a, inv(a)) = e # theorem mul_inv_cancel
-            mul(a, e) = a # theorem mul_one
-            inv(mul(a, b)) = mul(inv(b), inv(a)) # theorem mul_inv_rev
     prove:
-        # mul_inv_cancel
-        mul(inv(a), a) = e
-        mul(inv(a), mul(a, inv(a))) = mul(mul(inv(a), a), inv(a)) = mul(e, inv(a)) = inv(a)
-        mul(a, mul(inv(a), mul(a, inv(a)))) = mul(a, inv(a)) = mul(mul(a, inv(a)), mul(a, inv(a)))
-        mul(inv(mul(a, inv(a))), mul(a, inv(a))) = e = mul(inv(mul(a, inv(a))), mul(mul(a, inv(a)), mul(a, inv(a)))) = mul(mul(inv(mul(a, inv(a))), mul(a, inv(a))), mul(a, inv(a))) = mul(e, mul(a, inv(a))) = mul(a, inv(a))
-        mul(a, inv(a)) = e
+        forall s set, mul Fn(s, s)s, inv Fn(s)s, e s, a, b s:
+            $is_group(s, mul, inv, e)
+            =>:
+                mul(a, inv(a)) = e # theorem mul_inv_cancel
+                mul(a, e) = a # theorem mul_one
+                inv(mul(a, b)) = mul(inv(b), inv(a)) # theorem mul_inv_rev
+    # mul_inv_cancel
+    mul(inv(a), a) = e
+    mul(inv(a), mul(a, inv(a))) = mul(mul(inv(a), a), inv(a)) = mul(e, inv(a)) = inv(a)
+    mul(a, mul(inv(a), mul(a, inv(a)))) = mul(a, inv(a)) = mul(mul(a, inv(a)), mul(a, inv(a)))
+    mul(inv(mul(a, inv(a))), mul(a, inv(a))) = e = mul(inv(mul(a, inv(a))), mul(mul(a, inv(a)), mul(a, inv(a)))) = mul(mul(inv(mul(a, inv(a))), mul(a, inv(a))), mul(a, inv(a))) = mul(e, mul(a, inv(a))) = mul(a, inv(a))
+    mul(a, inv(a)) = e
 
-        # mul_one
-        mul(a, e) = mul(a, mul(inv(a), a)) = mul(mul(a, inv(a)), a) = mul(e, a) = a
-        
-        # mul_inv_rev
-        mul(mul(inv(b), inv(a)), mul(a, b)) = mul(inv(b), mul(inv(a), mul(a, b))) = mul(inv(b), mul(mul(inv(a), a), b)) = mul(inv(b), mul(e, b)) = mul(inv(b), b) = e
-        mul(inv(mul(a, b)), mul(a, b)) = e = mul(mul(inv(b), inv(a)), mul(a, b))
-        mul(mul(inv(mul(a, b)), mul(a, b)), inv(mul(a, b))) = mul(mul(mul(inv(b), inv(a)), mul(a, b)), inv(mul(a, b)))
-        mul(mul(inv(mul(a, b)), mul(a, b)), inv(mul(a, b))) = mul(inv(mul(a, b)), mul(mul(a, b), inv(mul(a, b)))) = mul(inv(mul(a, b)), e) = inv(mul(a, b))
-        mul(mul(mul(inv(b), inv(a)), mul(a, b)), inv(mul(a, b))) = mul(mul(inv(b), inv(a)), mul(mul(a, b), inv(mul(a, b)))) = mul(mul(inv(b), inv(a)), e) = mul(inv(b), inv(a))
-        inv(mul(a, b)) = mul(inv(b), inv(a))
+    # mul_one
+    mul(a, e) = mul(a, mul(inv(a), a)) = mul(mul(a, inv(a)), a) = mul(e, a) = a
+    
+    # mul_inv_rev
+    mul(mul(inv(b), inv(a)), mul(a, b)) = mul(inv(b), mul(inv(a), mul(a, b))) = mul(inv(b), mul(mul(inv(a), a), b)) = mul(inv(b), mul(e, b)) = mul(inv(b), b) = e
+    mul(inv(mul(a, b)), mul(a, b)) = e = mul(mul(inv(b), inv(a)), mul(a, b))
+    mul(mul(inv(mul(a, b)), mul(a, b)), inv(mul(a, b))) = mul(mul(mul(inv(b), inv(a)), mul(a, b)), inv(mul(a, b)))
+    mul(mul(inv(mul(a, b)), mul(a, b)), inv(mul(a, b))) = mul(inv(mul(a, b)), mul(mul(a, b), inv(mul(a, b)))) = mul(inv(mul(a, b)), e) = inv(mul(a, b))
+    mul(mul(mul(inv(b), inv(a)), mul(a, b)), inv(mul(a, b))) = mul(mul(inv(b), inv(a)), mul(mul(a, b), inv(mul(a, b)))) = mul(mul(inv(b), inv(a)), e) = mul(inv(b), inv(a))
+    inv(mul(a, b)) = mul(inv(b), inv(a))
