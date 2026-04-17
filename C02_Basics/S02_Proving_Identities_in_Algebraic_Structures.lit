@@ -1,0 +1,200 @@
+# proving identities in algebraic structures
+
+prop ring_property(s nonempty_set, add Fn(s, s)s, mul Fn(s, s)s, one s, zero s, neg Fn(s)s):
+    forall a, b, c s:
+        add(add(a, b), c) = add(a, add(b, c))
+        mul(mul(a, b), c) = mul(a, mul(b, c))
+        mul(a, add(b, c)) = add(mul(a, b), mul(a, c))
+        mul(add(a, b), c) = add(mul(a, c), mul(b, c))
+    forall a, b s:
+        add(a, b) = add(b, a)
+    forall a s:
+        add(zero, a) = add(a, zero) = a
+        add(a, neg(a)) = add(neg(a), a) = zero
+        mul(a, one) = mul(one, a) = a
+
+struct ring(s nonempty_set):
+    zero s
+    one s
+    add fn(x, y s) s
+    mul fn(x, y s) s
+    neg fn(x s) s
+    <=>:
+        $ring_property(s, self.add, self.mul, self.one, self.zero, self.neg)
+
+prop commring_property(s nonempty_set, r struct ring(s)):
+    forall a, b s:
+        r.mul(a, b) = r.mul(b, a)
+
+forall s nonempty_set, r struct ring(s):
+    $ring_property(s, r.add, r.mul, r.one, r.zero, r.neg)
+
+claim:
+    prove:
+        forall s nonempty_set, r struct ring(s), a, b, c s:
+            $commring_property(s, r)
+            =>:
+                r.mul(r.mul(c, b), a) = r.mul(b, r.mul(a, c))
+                r.mul(r.add(a, b), r.add(a, b)) = r.add(r.add(r.mul(a, a), r.add(r.mul(a, b), r.mul(a, b))), r.mul(b, b))
+                r.mul(r.add(a, b), r.add(a, r.neg(b))) = r.add(r.mul(a, a), r.neg(r.mul(b, b)))
+    # proof of `r.mul(r.mul(c, b), a) = r.mul(b, r.mul(a, c))`
+    $ring_property(s, r.add, r.mul, r.one, r.zero, r.neg)
+    r.mul(b, c) = r.mul(c, b)
+    r.mul(c, a) = r.mul(a, c)
+    r.mul(r.mul(c, b), a) = r.mul(r.mul(b, c), a) = r.mul(b, r.mul(c, a)) = r.mul(b, r.mul(a, c))
+
+    # proof of `r.mul(r.add(a, b), r.add(a, b)) = r.add(r.add(r.mul(a, a), r.add(r.mul(a, b), r.mul(a, b))), r.mul(b, b))`
+    r.mul(r.add(a, b), a) = r.add(r.mul(a, a), r.mul(b, a))
+    r.mul(r.add(a, b), b) = r.add(r.mul(a, b), r.mul(b, b))
+    r.mul(r.add(a, b), r.add(a, b)) = r.add(r.mul(r.add(a, b), a), r.mul(r.add(a, b), b)) = r.add(r.add(r.mul(a, a), r.mul(b, a)), r.add(r.mul(a, b), r.mul(b, b))) = r.add(r.mul(a, a), r.add(r.mul(b, a), r.add(r.mul(a, b), r.mul(b, b)))) #= r.add(r.mul(a, a), r.add(r.add(r.mul(b, a), r.mul(a, b)), r.mul(b, b))) = r.add(r.add(r.mul(a, a), r.add(r.mul(a, b), r.mul(a, b))), r.mul(b, b))
+
+
+    r.add(r.mul(a, a), r.add(r.mul(b, a), r.add(r.mul(a, b), r.mul(b, b)))) = r.add(r.mul(a, a), r.add(r.add(r.mul(b, a), r.mul(a, b)), r.mul(b, b))) #= r.add(r.add(r.mul(a, a), r.add(r.mul(a, b), r.mul(a, b))), r.mul(b, b))
+
+    #----------TODO---------------
+
+    r.mul(r.add(a, b), r.add(a, r.neg(b))) = r.add(r.mul(a, r.add(a, r.neg(b))), r.mul(b, r.add(a, r.neg(b)))) = r.add(r.add(r.mul(a, a), r.mul(a, r.neg(b))), r.add(r.mul(b, a), r.mul(b, r.neg(b)))) = r.add(r.add(r.mul(a, a), r.mul(a, r.neg(b))), r.add(r.mul(a, b), r.mul(b, r.neg(b)))) = r.add(r.mul(a, a), r.add(r.mul(a, r.neg(b)), r.add(r.mul(a, b), r.mul(b, r.neg(b))))) = r.add(r.mul(a, a), r.add(r.add(r.mul(a, r.neg(b)), r.mul(a, b)), r.mul(b, r.neg(b)))) = r.add(r.mul(a, a), r.add(r.mul(a, r.add(b, r.neg(b))), r.mul(b, r.neg(b))))
+
+    r.mul(a, r.zero) = r.mul(a, r.add(r.zero, r.zero)) = r.add(r.mul(a, r.zero), r.mul(a, r.zero))
+    r.zero = r.add(r.neg(r.mul(a, r.zero)), r.mul(a, r.zero)) = r.add(r.neg(r.mul(a, r.zero)), r.add(r.mul(a, r.zero), r.mul(a, r.zero))) = r.add(r.add(r.neg(r.mul(a, r.zero)), r.mul(a, r.zero)), r.mul(a, r.zero)) = r.add(r.zero, r.mul(a, r.zero)) = r.mul(a, r.zero)
+
+    r.mul(b, r.neg(b)) = r.add(r.mul(b, r.neg(b)), r.zero) = r.add(r.mul(b, r.neg(b)), r.add(r.mul(b, b), r.neg(r.mul(b, b)))) = r.add(r.add(r.mul(b, r.neg(b)), r.mul(b, b)), r.neg(r.mul(b, b))) = r.add(r.mul(b, r.add(r.neg(b), b)), r.neg(r.mul(b, b))) = r.add(r.mul(b, r.zero), r.neg(r.mul(b, b))) = r.add(r.zero, r.neg(r.mul(b, b))) = r.neg(r.mul(b, b))
+
+    r.mul(r.add(a, b), r.add(a, r.neg(b))) = r.add(r.mul(a, a), r.add(r.mul(a, r.zero), r.mul(b, r.neg(b)))) = r.add(r.mul(a, a), r.add(r.zero, r.mul(b, r.neg(b)))) = r.add(r.mul(a, a), r.mul(b, r.neg(b))) = r.add(r.mul(a, a), r.neg(r.mul(b, b)))
+"""
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a, b, c, d r:
+            $commring_property(r, g)
+            c = r.add(r.mul(d, a), b)
+            b = r.mul(a, d)
+            =>:
+                c = r.add(r.mul(a, d), r.mul(a, d))
+    $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+    c = r.add(r.mul(d, a), b) = r.add(r.mul(d, a), r.mul(a, d)) = r.add(r.mul(a, d), r.mul(a, d))
+
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a, b r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            =>:
+                r.add(r.neg(a), r.add(a, b)) = b # theorem neg_add_cancel_left
+                r.add(r.add(a, b), r.neg(b)) = a # theorem add_neg_cancel_right
+    r.add(r.neg(a), r.add(a, b)) = r.add(r.add(r.neg(a), a), b) = r.add(r.zero, b) = b
+    r.add(r.add(a, b), r.neg(b)) = r.add(a, r.add(b, r.neg(b))) = r.add(a, r.zero) = a
+
+# theorem add_left_cancel
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a, b, c r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            r.add(a, b) = r.add(a, c)
+            =>:
+                b = c
+    r.add(r.neg(a), r.add(a, b)) = r.add(r.neg(a), r.add(a, c))
+    r.add(r.neg(a), r.add(a, b)) = r.add(r.add(r.neg(a), a), b) = r.add(r.zero, b) = b
+    r.add(r.neg(a), r.add(a, c)) = r.add(r.add(r.neg(a), a), c) = r.add(r.zero, c) = c
+    b = c
+
+# theorem add_right_cancel
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a, b, c r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            r.add(a, b) = r.add(c, b)
+            =>:
+                a = c
+    r.add(r.add(a, b), r.neg(b)) = r.add(r.add(c, b), r.neg(b))
+    r.add(r.add(a, b), r.neg(b)) = r.add(a, r.add(b, r.neg(b))) = r.add(a, r.zero) = a
+    r.add(r.add(c, b), r.neg(b)) = r.add(c, r.add(b, r.neg(b))) = r.add(c, r.zero) = c
+    a = c
+
+# theorem mul_zero
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            =>:
+                r.mul(a, r.zero) = r.zero
+    r.add(r.mul(a, r.zero), r.mul(a, r.zero)) = r.mul(a, r.add(r.zero, r.zero)) = r.mul(a, r.zero) = r.add(r.mul(a, r.zero), r.zero)
+    r.add(r.neg(r.mul(a, r.zero)), r.add(r.mul(a, r.zero), r.mul(a, r.zero))) = r.add(r.neg(r.mul(a, r.zero)), r.add(r.mul(a, r.zero), r.zero))
+    r.add(r.neg(r.mul(a, r.zero)), r.add(r.mul(a, r.zero), r.mul(a, r.zero))) = r.add(r.add(r.neg(r.mul(a, r.zero)), r.mul(a, r.zero)), r.mul(a, r.zero)) = r.add(r.zero, r.mul(a, r.zero)) = r.mul(a, r.zero)
+    r.add(r.neg(r.mul(a, r.zero)), r.add(r.mul(a, r.zero), r.zero)) = r.add(r.add(r.neg(r.mul(a, r.zero)), r.mul(a, r.zero)), r.zero) = r.add(r.zero, r.zero) = r.zero
+    r.mul(a, r.zero) = r.zero
+
+# theorem zero_mul
+# remember that multiplication is not assumed to be commutative
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            =>:
+                r.mul(r.zero, a) = r.zero
+    r.add(r.mul(r.zero, a), r.mul(r.zero, a)) = r.mul(r.add(r.zero, r.zero), a) = r.mul(r.zero, a) = r.add(r.mul(r.zero, a), r.zero)
+    r.add(r.neg(r.mul(r.zero, a)), r.add(r.mul(r.zero, a), r.mul(r.zero, a))) = r.add(r.neg(r.mul(r.zero, a)), r.add(r.mul(r.zero, a), r.zero))
+    r.add(r.neg(r.mul(r.zero, a)), r.add(r.mul(r.zero, a), r.mul(r.zero, a))) = r.add(r.add(r.neg(r.mul(r.zero, a)), r.mul(r.zero, a)), r.mul(r.zero, a)) = r.add(r.zero, r.mul(r.zero, a)) = r.mul(r.zero, a)
+    r.add(r.neg(r.mul(r.zero, a)), r.add(r.mul(r.zero, a), r.zero)) = r.add(r.add(r.neg(r.mul(r.zero, a)), r.mul(r.zero, a)), r.zero) = r.add(r.zero, r.zero) = r.zero
+    r.mul(r.zero, a) = r.zero
+
+# theorem neg_eq_of_add_eq_zero
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a, b r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            r.add(a, b) = r.zero
+            =>:
+                r.neg(a) = b
+    r.add(a, b) = r.zero = r.add(a, r.neg(a))
+    r.add(r.neg(a), r.add(a, b)) = r.add(r.neg(a), r.add(a, r.neg(a)))
+    r.add(r.neg(a), r.add(a, b)) = r.add(r.add(r.neg(a), a), b) = r.add(r.zero, b) = b
+    r.add(r.neg(a), r.add(a, r.neg(a))) = r.add(r.neg(a), r.zero) = r.neg(a)
+    r.neg(a) = b
+
+# theorem eq_neg_of_add_eq_zero
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a, b r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            r.add(a, b) = r.zero
+            =>:
+                a = r.neg(b)
+    r.add(r.add(a, b), r.neg(b)) = r.add(r.zero, r.neg(b)) = r.neg(b)
+    r.add(r.add(a, b), r.neg(b)) = r.add(a, r.add(b, r.neg(b))) = r.add(a, r.zero) = a
+    a = r.neg(b)
+
+# theorem neg_zero
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r):
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            =>:
+                r.neg(r.zero) = r.zero
+    r.add(r.zero, r.zero) = r.zero
+    r.add(r.neg(r.zero), r.add(r.zero, r.zero)) = r.add(r.neg(r.zero), r.zero)
+    r.add(r.neg(r.zero), r.add(r.zero, r.zero)) = r.add(r.add(r.neg(r.zero), r.zero), r.zero) = r.add(r.zero, r.zero) = r.zero
+    r.add(r.neg(r.zero), r.zero) = r.neg(r.zero)
+    r.neg(r.zero) = r.zero
+
+# theorem neg_neg
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), a r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            =>:
+                r.neg(r.neg(a)) = a
+    r.add(r.neg(r.neg(a)), r.neg(a)) = r.zero
+    r.add(r.add(r.neg(r.neg(a)), r.neg(a)), a) = r.add(r.zero, a) = a
+    r.add(r.add(r.neg(r.neg(a)), r.neg(a)), a) = r.add(r.neg(r.neg(a)), r.add(r.neg(a), a)) = r.add(r.neg(r.neg(a)), r.zero) = r.neg(r.neg(a))
+    r.neg(r.neg(a)) = a
+
+# theorem two_mul
+claim:
+    prove:
+        forall r nonempty_set, g struct ring(r), two r, a r:
+            $ring_property(r, r.add, r.mul, r.one, r.zero, r.neg)
+            two = r.add(r.one, r.one) # theorem one_add_one_eq_two
+            # perhaps we need algo or some king of mapping from N to an arbitrary ring, so we temporarily turn `theorem one_add_one_eq_two` into some definition
+            =>:
+                r.mul(two, a) = r.add(a, a)
+    r.mul(two, a) = r.mul(r.add(r.one, r.one), a) = r.add(r.mul(r.one, a), r.mul(r.one, a)) = r.add(a, a)
+"""
