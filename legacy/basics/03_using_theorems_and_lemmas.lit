@@ -1,0 +1,275 @@
+# 2.3 Using Theorems and Lemmas
+
+prop a_le_c(a, b, c R):
+    a <= c
+
+prop a_lt_c(a, b, c R):
+    a < c
+
+know forall a, b, c R:
+    a <= b
+    b <= c
+    =>:
+        $a_le_c(a, b, c)
+
+know forall a, b, c R:
+    a <= b
+    b < c
+    =>:
+        $a_lt_c(a, b, c)
+
+know forall a, b, c R:
+    a < b
+    b <= c
+    =>:
+        $a_lt_c(a, b, c)
+
+know forall a, b, c R:
+    a < b
+    b < c
+    =>:
+        $a_lt_c(a, b, c)
+
+forall a R:
+    a <= a
+
+claim:
+    prove:
+        forall a, b, c R:
+            a <= b
+            b <= c
+            =>:
+                a <= c # le_trans
+    $a_le_c(a, b, c)
+
+# lt_of_le_of_lt
+claim:
+    prove:
+        forall a, b, c R:
+            a <= b
+            b < c
+            =>:
+                a < c
+    $a_lt_c(a, b, c)
+
+# lt_of_lt_of_le
+claim:
+    prove:
+        forall a, b, c R:
+            a < b
+            b <= c
+            =>:
+                a < c
+    $a_lt_c(a, b, c)
+
+# lt_trans
+claim:
+    prove:
+        forall a, b, c R:
+            a < b
+            b < c
+            =>:
+                a < c
+    $a_lt_c(a, b, c)
+
+claim:
+    prove:
+        forall a, b, c, d, e R:
+            a <= b
+            b < c
+            c <= d
+            d < e
+            =>:
+                a < e
+    $a_lt_c(a, b, c) # infer: a < c
+    $a_lt_c(c, d, e) # infer: c < e
+    $a_lt_c(a, c, e) # infer: a < e
+
+
+
+claim:
+    prove:
+        forall a, b, c, d R:
+            2 * a <= 3 * b
+            1 <= a
+            d = 2
+            =>:
+                d + a <= 5 * b
+
+    know:
+        forall a R, b R:
+            a >= 0
+            b >= 1
+            =>:
+                a <= b * a
+
+        forall a, b, c R:
+            c >= 0
+            a <= b
+            =>:
+                a * c <= b * c
+
+        forall a, b, c R:
+            c > 0
+            a <= b
+            =>:
+                a / c <= b / c
+
+    know:
+        forall a, b R:
+            0 <= a
+            0 <= b
+            =>:
+                0 <= a * b
+
+            
+    d = 2 * 1 <= 2 * a
+    a = (2*a)/2 <= (3*b)/2 = 1.5 * b
+    0 <= (2/3)* a = (2 * a)/3 <= (3 * b)/3 = b
+    d + a <= 2 * a + a <= 3 * b + a <= 3 * b +1.5*b = 4.5*b <= 5 * b
+
+claim:
+    prove:
+        forall a, b, c R:
+            1 <= a
+            b <= c
+            =>:
+                2 + a + exp(b) <= 3 * a + exp(c)
+    do_nothing
+
+# add_le_add
+claim:
+    prove:
+        forall a, b, c, d R:
+            a <= b
+            c <= d
+            =>:
+                a + c <= b + d
+    do_nothing
+
+# more theorems in the linarith library that can be used to establish inequalities on the real numbers
+
+claim:
+    prove:
+        forall a, b, c R:
+            a <= b
+            =>:
+                c + a <= c + b # add_le_add_left
+                a + c <= b + c # add_le_add_right
+    do_nothing
+
+# add_lt_add_of_le_of_lt
+claim:
+    prove:
+        forall a, b, c, d R:
+            a <= b
+            c < d
+            =>:
+                a + c < b + d
+    do_nothing
+
+# add_lt_add_of_lt_of_le
+claim:
+    prove:
+        forall a, b, c, d R:
+            a < b
+            c <= d
+            =>:
+                a + c < b + d
+    do_nothing
+
+claim:
+    prove:
+        forall a, b, c R:
+            a < b
+            =>:
+                c + a < c + b # add_lt_add_left
+                a + c < b + c # add_lt_add_right
+    do_nothing
+
+# add_nonneg
+claim:
+    prove:
+        forall a, b R:
+            0 <= a
+            0 <= b
+            =>:
+                0 <= a + b
+    do_nothing
+
+# add_pos
+claim:
+    prove:
+        forall a, b R:
+            0 < a
+            0 < b
+            =>:
+                0 < a + b
+    do_nothing
+
+# add_pos_of_pos_of_nonneg
+claim:
+    prove:
+        forall a, b R:
+            0 < a
+            0 <= b
+            =>:
+                0 < a + b
+    do_nothing
+
+claim:
+    prove:
+        forall a, b, c, d, e R:
+            a <= b
+            c < d
+            =>:
+                a + exp(c) + e < b + exp(d) + e
+    do_nothing
+
+# try the following examples on your own
+claim:
+    prove:
+        forall a, c, d, e R:
+            d <= e
+            =>:
+                c + exp(a + d) <= c + exp(a + e)
+    do_nothing
+
+claim:
+    prove:
+        forall x R: 1 + exp(x) > 0
+    do_nothing
+
+claim:
+    prove:
+        forall a, b R:
+            a <= b
+            =>:
+                1 + exp(a) > 0
+                1 + exp(b) > 0
+                ln(1 + exp(a)) <= ln(1 + exp(b))
+    do_nothing
+
+# sq_nonneg
+claim:
+    prove:
+        forall a R: a^2 >= 0
+    do_nothing
+
+claim:
+    prove:
+        forall a, b, c R:
+            a <= b
+            =>:
+                c - exp(b) <= c - exp(a)
+    do_nothing
+
+claim:
+    prove:
+        forall a, b R: 2 * a * b <= a^2 + b^2
+    do_nothing
+
+claim:
+    prove:
+        forall a, b R: abs(a * b) <= (a^2 + b^2) / 2
+    do_nothing
