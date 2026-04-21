@@ -1,0 +1,45 @@
+# 7.1 Defining Structures
+
+"""
+In the broadest sense of term, a structure is a specification of a collection of data, possibly with constraints that the data is required to specify. An instance of the structure is a particular bundle of data satisfying the constraints.
+"""
+
+# example: specify that a point is a tuple of three
+struct Point(s set):
+    x s
+    y s
+    z s
+
+# example: two instances of a structure are equal when their components are equal -- a property known as extensionality
+prop two_points_are_equal(a, b struct Point(R)):
+    a.x = b.x
+    a.y = b.y
+    a.z = b.z
+
+know:
+    forall a, b struct Point(R):
+        =>:
+            a = b
+        <=>:
+            $two_points_are_equal(a, b)
+
+# define particular instances of a certain structure
+have p struct Point(R)
+know:
+    p.x = 2
+    p.y = -1
+    p.z = 4
+
+
+"""
+The next examples show how to define functions on structures.
+"""
+let add fn(p1, p2 struct Point(R)) struct Point(R)
+know:
+    forall point, p1, p2 struct Point(R):
+        =>:
+            point = add(p1, p2)
+        <=>:
+            point.x = p1.x + p2.x
+            point.y = p1.y + p2.y
+            point.z = p1.z + p2.z

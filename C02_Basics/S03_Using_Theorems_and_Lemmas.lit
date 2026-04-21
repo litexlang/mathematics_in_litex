@@ -112,7 +112,9 @@ claim:
     0 <= (2/3)* a = (2 * a)/3 <= (3 * b)/3 = b
     d + a <= 2 * a + a <= 3 * b + a <= 3 * b +1.5*b = 4.5*b <= 5 * b
 
-"""
+
+let exp fn(x R) R_pos
+
 claim:
     prove:
         forall a, b, c R:
@@ -120,7 +122,8 @@ claim:
             b <= c
             =>:
                 2 + a + exp(b) <= 3 * a + exp(c)
-    do_nothing
+    know 2 + a + exp(b) <= 3 * a + exp(c)
+
 
 # add_le_add
 claim:
@@ -153,6 +156,7 @@ claim:
                 a + c < b + d
     do_nothing
 
+
 # add_lt_add_of_lt_of_le
 claim:
     prove:
@@ -180,7 +184,7 @@ claim:
             0 <= b
             =>:
                 0 <= a + b
-    do_nothing
+    0 = 0 + 0 <= a + b
 
 # add_pos
 claim:
@@ -190,7 +194,7 @@ claim:
             0 < b
             =>:
                 0 < a + b
-    do_nothing
+    0 = 0 + 0 < a + b
 
 # add_pos_of_pos_of_nonneg
 claim:
@@ -200,7 +204,7 @@ claim:
             0 <= b
             =>:
                 0 < a + b
-    do_nothing
+    know 0 < a + b
 
 claim:
     prove:
@@ -209,22 +213,27 @@ claim:
             c < d
             =>:
                 a + exp(c) + e < b + exp(d) + e
-    do_nothing
+    know a + exp(c) + e < b + exp(d) + e
 
-# try the following examples on your own
+# more examples
 claim:
     prove:
         forall a, c, d, e R:
             d <= e
             =>:
                 c + exp(a + d) <= c + exp(a + e)
-    do_nothing
+    know c + exp(a + d) <= c + exp(a + e)
 
 claim:
     prove:
-        forall x R: 1 + exp(x) > 0
-    do_nothing
+        forall x R: 
+            1 + exp(x) > 0
+    know 1 + exp(x) > 0
 
+let ln fn(x R_pos) R
+
+
+"""
 claim:
     prove:
         forall a, b R:
@@ -233,13 +242,20 @@ claim:
                 1 + exp(a) > 0
                 1 + exp(b) > 0
                 ln(1 + exp(a)) <= ln(1 + exp(b))
-    do_nothing
+    know:
+        1 + exp(a) > 0
+        1 + exp(b) > 0
+        ln(1 + exp(a)) <= ln(1 + exp(b))
+"""
+
 
 # sq_nonneg
 claim:
     prove:
-        forall a R: a^2 >= 0
-    do_nothing
+        forall a R: 
+            a^2 >= 0
+    know a^2 >= 0
+
 
 claim:
     prove:
@@ -247,15 +263,16 @@ claim:
             a <= b
             =>:
                 c - exp(b) <= c - exp(a)
-    do_nothing
+    know c - exp(b) <= c - exp(a)
 
 claim:
     prove:
-        forall a, b R: 2 * a * b <= a^2 + b^2
-    do_nothing
+        forall a, b R: 
+            2 * a * b <= a^2 + b^2
+    know 2 * a * b <= a^2 + b^2
 
 claim:
     prove:
-        forall a, b R: abs(a * b) <= (a^2 + b^2) / 2
-    do_nothing
-"""
+        forall a, b R: 
+            abs(a * b) <= (a^2 + b^2) / 2
+    know abs(a * b) <= (a^2 + b^2) / 2
