@@ -1,0 +1,101 @@
+# 2.4 More examples on order and divisibility
+
+# min_le_left
+claim:
+    prove:
+        forall a, b R: 
+            min(a, b) <= a
+    know min(a, b) <= a
+
+# min_le_right
+claim:
+    prove:
+        forall a, b R: 
+            min(a, b) <= b
+    know min(a, b) <= b
+
+claim:
+    prove:
+        forall a, b, c R:
+            c <= a
+            c <= b
+            =>:
+                c <= min(a, b)
+    know c <= min(a, b)
+
+claim:
+    prove:
+        forall a, b, c R: 
+            min(min(a, b), c) = min(a, min(b, c))
+    know min(min(a, b), c) = min(a, min(b, c))
+
+# theorem aux and the corresponding example
+claim:
+    prove:
+        forall a, b, c R: 
+            min(a, b) + c = min(a + c, b + c)
+    know min(a, b) + c = min(a + c, b + c)
+
+# abs_add
+know:
+    forall a, b R: 
+        abs(a + b) <= abs(a) + abs(b)
+# a variant of abs_add
+claim:
+    prove:
+        forall a, b R: 
+            abs(a) - abs(b) <= abs(a - b)
+    know abs(a) - abs(b) <= abs(a - b)
+
+# the divisibility relation on the natural numbers
+# dvd_trans
+prop dvd(x N_pos, y N):
+    y / x $in N
+
+claim:
+    prove:
+        forall x, y N_pos, z N:
+            x $dvd y
+            y $dvd z
+            =>:
+                x $dvd z
+    know x $dvd z
+
+# dvd_mul_left
+claim:
+    prove:
+        forall x N_pos, y N: 
+            x $dvd (x * y)
+    know x $dvd (x * y)
+
+# dvd_mul_of_dvd_left
+claim:
+    prove:
+        forall x N_pos, y, z N:
+            x $dvd y
+            =>:
+                x $dvd (y * z)
+    know x $dvd (y * z)
+
+# example: x | y * x * z
+claim:
+    prove:
+        forall x N_pos, y, z N: 
+            x $dvd (y * x * z)
+    know x $dvd (y * x * z) 
+
+# example: x | x^2
+claim:
+    prove:
+        forall x N_pos: 
+            x $dvd (x^2)
+    know x $dvd (x^2)
+
+# another example
+claim:
+    prove:
+        forall x N_pos, y, z, w N:
+            x $dvd w
+            =>:
+                x $dvd (y * (x * z) + x^2 + w^2)
+    know x $dvd (y * (x * z) + x^2 + w^2)
