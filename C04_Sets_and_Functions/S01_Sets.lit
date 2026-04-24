@@ -1,0 +1,224 @@
+# 4.1 Sets
+
+# the usual set-theoretic operations and relations
+claim:
+    prove:
+        forall s, t, u set:
+            s $subset t
+            =>:
+                intersect(s, u) $subset intersect(t, u)
+    know intersect(s, u) $subset intersect(t, u)
+
+# dealing with unions:
+claim:
+    prove:
+        forall s, t, u set:
+            (s \intersect (t \union u)) $subset (s \intersect t \union s \intersect u)
+    know (s \intersect (t \union u)) $subset (s \intersect t \union s \intersect u)
+
+claim:
+    prove:
+        forall s, t, u set:
+            (s \intersect t \union s \intersect u) $subset (s \intersect (t \union u)) 
+    know (s \intersect t \union s \intersect u) $subset (s \intersect (t \union u)) 
+
+# examples on set_minus
+claim:
+    prove:
+        forall s, t, u set:
+            ((s \set_minus t) \set_minus u) $subset (s \set_minus (t \union u))
+    know ((s \set_minus t) \set_minus u) $subset (s \set_minus (t \union u))
+
+# the reverse inslusion
+claim:
+    prove:
+        forall s, t, u set:
+            (s \set_minus (t \union u)) $subset ((s \set_minus t) \set_minus u)
+    know (s \set_minus (t \union u)) $subset ((s \set_minus t) \set_minus u)
+
+# To prove that two sets are equal, it suffices to show that every element of one is an element of the other. This principle is known as "extensionality."
+claim:
+    prove:
+        forall s, t set:
+            s \intersect t = t \intersect s
+    know s \intersect t = t \intersect s
+
+# some set-theoretic identities to prove:
+# s ∩ (s ∪ t) = s
+claim:
+    prove:
+        forall s, t set:
+            s \intersect (s \union t) = s
+    know s \intersect (s \union t) = s
+
+# s ∪ s ∩ t = s
+claim:
+    prove:
+        forall s, t set:
+            s \union (s \intersect t) = s
+    know s \union (s \intersect t) = s
+
+# s \ t ∪ t = s ∪ t
+claim:
+    prove:
+        forall s, t set:
+            (s \set_minus t) \union t = s \union t
+    know (s \set_minus t) \union t = s \union t
+
+# s \ t ∪ t \ s = (s ∪ t) \ (s ∩ t)
+claim:
+    prove:
+        forall s, t set:
+            (s \set_minus t) \union (t \set_minus s) = (s \union t) \set_minus (s \intersect t)
+    know (s \set_minus t) \union (t \set_minus s) = (s \union t) \set_minus (s \intersect t)
+
+"""
+When it comes to representing sets, here is what is going on underneath the hood. Sets are really properties, treated as objects.
+"""
+# defining sets using set-builder:
+prop even(n N):
+    n % 2 = 0
+prop odd(n N):
+    n % 2 = 1
+
+have evens set = {n N: $even(n)}
+have odds set = {n N: $odd(n)}
+
+claim:
+    prove:
+        evens \union odds = N
+    know evens \union odds = N
+
+prop is_prime(n N)
+have primes set = {n N: $is_prime(n)}
+
+claim:
+    prove:
+        (primes \intersect {n N: n > 2}) $subset odds
+    know (primes \intersect {n N: n > 2}) $subset odds
+
+
+# example (h₀ : ∀ x ∈ s, ¬Even x) (h₁ : ∀ x ∈ s, Prime x) : ∀ x ∈ s, ¬Even x ∧ Prime x
+have s0, t0 power_set(N)
+claim:
+    prove:
+        forall x s0:
+            $odd(x)
+            $is_prime(x)
+            =>:
+                $odd(x) and $is_prime(x)
+    know $odd(x) and $is_prime(x)
+
+# example (h : ∃ x ∈ s, ¬Even x ∧ Prime x) : ∃ x ∈ s, Prime x
+claim:
+    prove:
+        forall s power_set(N):
+            exist x s st {$odd(x), $is_prime(x)}
+            =>:
+                exist x s st {$is_prime(x)}
+    know exist x s st {$is_prime(x)}
+
+# some slight variations with s ⊆ t:
+# example (h₀ : ∀ x ∈ t, ¬Even x) (h₁ : ∀ x ∈ t, Prime x) : ∀ x ∈ s, ¬Even x ∧ Prime x
+prop p(s power_set(N)):
+    forall x s:
+        $odd(x) and $is_prime(x)
+
+claim:
+    prove:
+        forall:
+            s0 $subset t0
+            $p(t0)
+            =>:
+                $p(s0)
+    know $p(s0)
+
+
+# example (h : ∃ x ∈ s, ¬Even x ∧ Prime x) : ∃ x ∈ t, Prime x
+claim:
+    prove:
+        forall:
+            s0 $subset t0
+            exist x s0 st {$odd(x) and $is_prime(x)}
+            =>:
+                exist x t0 st {$is_prime(x)}
+    know exist x t0 st {$is_prime(x)}
+
+#-----------------------------------TODO------------------------------------------
+"""
+section
+variable {α I : Type*}
+variable (A B : I → Set α)
+variable (s : Set α)
+
+open Set
+
+example : (s ∩ ⋃ i, A i) = ⋃ i, A i ∩ s := by
+  ext x
+  simp only [mem_inter_iff, mem_iUnion]
+  constructor
+  · rintro ⟨xs, ⟨i, xAi⟩⟩
+    exact ⟨i, xAi, xs⟩
+  rintro ⟨i, xAi, xs⟩
+  exact ⟨xs, ⟨i, xAi⟩⟩
+
+example : (⋂ i, A i ∩ B i) = (⋂ i, A i) ∩ ⋂ i, B i := by
+  ext x
+  simp only [mem_inter_iff, mem_iInter]
+  constructor
+  · intro h
+    constructor
+    · intro i
+      exact (h i).1
+    intro i
+    exact (h i).2
+  rintro ⟨h1, h2⟩ i
+  constructor
+  · exact h1 i
+  exact h2 i
+
+
+example : (s ∪ ⋂ i, A i) = ⋂ i, A i ∪ s := by
+  sorry
+
+def primes : Set ℕ :=
+  { x | Nat.Prime x }
+
+example : (⋃ p ∈ primes, { x | p ^ 2 ∣ x }) = { x | ∃ p ∈ primes, p ^ 2 ∣ x } :=by
+  ext
+  rw [mem_iUnion₂]
+  simp
+
+example : (⋃ p ∈ primes, { x | p ^ 2 ∣ x }) = { x | ∃ p ∈ primes, p ^ 2 ∣ x } := by
+  ext
+  simp
+
+example : (⋂ p ∈ primes, { x | ¬p ∣ x }) ⊆ { x | x = 1 } := by
+  intro x
+  contrapose!
+  simp
+  apply Nat.exists_prime_and_dvd
+
+example : (⋃ p ∈ primes, { x | x ≤ p }) = univ := by
+  sorry
+
+end
+
+section
+
+open Set
+
+variable {α : Type*} (s : Set (Set α))
+
+example : ⋃₀ s = ⋃ t ∈ s, t := by
+  ext x
+  rw [mem_iUnion₂]
+  simp
+
+example : ⋂₀ s = ⋂ t ∈ s, t := by
+  ext x
+  rw [mem_iInter₂]
+  rfl
+
+end
+"""

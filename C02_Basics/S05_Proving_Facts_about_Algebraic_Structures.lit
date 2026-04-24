@@ -7,7 +7,8 @@ prop PartialOrder(x, y X)
 
 know:
     # le_refl
-    forall x X: $PartialOrder(x, x)
+    forall x X: 
+        $PartialOrder(x, x)
     # le_trans
     forall x, y, z X:
         $PartialOrder(x, y)
@@ -26,7 +27,8 @@ prop strictPartialOrder(x, y X)
 
 know:
     # lt_irrefl
-    forall x X: not $strictPartialOrder(x, x)
+    forall x X: 
+        not $strictPartialOrder(x, x)
     # lt_trans
     forall x, y, z X:
         $strictPartialOrder(x, y)
@@ -113,14 +115,16 @@ claim:
 # sup_assoc
 claim:
     prove:
-        forall x, y, z X: join(join(x, y), z) = join(x, join(y, z))
+        forall x, y, z X: 
+            join(join(x, y), z) = join(x, join(y, z))
     know join(join(x, y), z) = join(x, join(y, z))
 
 # absorption laws
 # inf_sup_self
 claim:
     prove:
-        forall x, y X: meet(x, join(x, y)) = x
+        forall x, y X: 
+            meet(x, join(x, y)) = x
     know meet(x, join(x, y)) = x
 # sup_inf_self
 claim:
