@@ -1,0 +1,182 @@
+# 3.2 The Existential Quantifier
+
+"""
+The existential quantifier is used to represent the phrase "there exists." The canonical way to prove such a statement is to exhibit a real number and show that it has the stated property.
+"""
+# example : ∃ x : ℝ, 2 < x ∧ x < 3
+claim:
+    prove:
+        exist x R st {2 < x, x < 3}
+    know exist x R st {2 < x, x < 3}
+
+"""
+So now we know how to prove an exists statement. But how do we use one? We can use the existential quantifier to say that "f is bounded" without specifying the bound:
+"""
+prop FnUb(f fn(x R)R, a R):
+    forall x R:
+        f(x) <= a
+prop FnLb(f fn(x R)R, b R):
+    forall x R:
+        b <= f(x)
+
+"""
+def FnHasUb (f : ℝ → ℝ) :=
+  ∃ a, FnUb f a
+
+def FnHasLb (f : ℝ → ℝ) :=
+  ∃ a, FnLb f a
+"""
+prop FnHasUb(f fn(x R)R):
+    exist a R st {$FnUb(f, a)}
+prop FnHasLb(f fn(x R)R):
+    exist b R st {$FnLb(f, b)}
+
+# example (ubf : FnHasUb f) (ubg : FnHasUb g) : FnHasUb fun x ↦ f x + g x
+have fn FnAdd(f, g fn(x R)R) fn(x R)R = f(x) + g(x)
+claim:
+    prove:
+        forall f, g fn(x R)R, a, b R:
+            $FnUb(f, a)
+            $FnUb(g, b)
+            =>:
+                $FnUb(f \FnAdd g, a + b)
+    know $FnUb(f \FnAdd g, a + b)
+# using the statement above to prove that if f and g have upper bounds, then so does f + g
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $FnHasUb(f)
+            $FnHasUb(g)
+            =>:
+                $FnHasUb(f \FnAdd g)
+    know $FnHasUb(f \FnAdd g)
+
+# example (lbf : FnHasLb f) (lbg : FnHasLb g) : FnHasLb fun x ↦ f x + g x
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $FnHasLb(f)
+            $FnHasLb(g)
+            =>:
+                $FnHasLb(f \FnAdd g)
+    know $FnHasLb(f \FnAdd g)
+
+# example {c : ℝ} (ubf : FnHasUb f) (h : c ≥ 0) : FnHasUb fun x ↦ c * f x
+have fn cMul(c R, f fn(x R)R) fn(x R)R = c * f(x)
+claim:
+    prove:
+        forall f fn(x R)R, c R:
+            0 <= c
+            $FnHasUb(f)
+            =>:
+                $FnHasUb(c \cMul f)
+    know $FnHasUb(c \cMul f)
+
+"""
+def SumOfSquares (x : α) :=
+  ∃ a b, x = a ^ 2 + b ^ 2
+"""
+prop SumOfSquares(x Z):
+    exist a, b Z st {x = a^2 + b^2}
+
+"""
+theorem sumOfSquares_mul {x y : α} (sosx : SumOfSquares x) (sosy : SumOfSquares y) :
+    SumOfSquares (x * y)
+"""
+claim:
+    prove:
+        forall x, y Z:
+            $SumOfSquares(x)
+            $SumOfSquares(y)
+            =>:
+                $SumOfSquares(x * y)
+    know $SumOfSquares(x * y)
+
+# example (divab : a ∣ b) (divbc : b ∣ c) : a ∣ c
+prop dvd(a, b Z):
+    a != 0
+    b / a $in Z
+claim:
+    prove:
+        forall a, b, c Z:
+            a != 0
+            b != 0
+            a $dvd b
+            b $dvd c
+            =>:
+                a $dvd c
+    know a $dvd c
+
+# example (divab : a ∣ b) (divac : a ∣ c) : a ∣ b + c 
+claim:
+    prove:
+        forall a, b, c Z:
+            a != 0
+            a $dvd b
+            a $dvd c
+            =>:
+                a $dvd (b + c)
+    know a $dvd (b + c)
+
+"""
+For another important example, a function f : α → β is said to be surjective if for every y in the codomain, β , there is an x in the domain, α, such that f(x) = y.
+"""
+prop surjective(s, t set, f fn(x s)t):
+    forall y t:
+        exist x s st {f(x) = y}
+
+# example {c : ℝ} : Surjective fun x ↦ x + c
+have fn AddC(f fn(x R)R, c R) fn(x R)R = f(x) + c
+claim:
+    prove:
+        forall f fn(x R)R, c R:
+            $surjective(R, R, f)
+            =>:
+                $surjective(R, R, f \AddC c)
+    know $surjective(R, R, f \AddC c)
+
+# example {c : ℝ} (h : c ≠ 0) : Surjective fun x ↦ c * x
+claim:
+    prove:
+        forall f fn(x R)R, c R:
+            c != 0
+            $surjective(R, R, f)
+            =>:
+                $surjective(R, R, c \cMul f)
+    know $surjective(R, R, c \cMul f)
+
+# example (x y : ℝ) (h : x - y ≠ 0) : (x ^ 2 - y ^ 2) / (x - y) = x + y
+claim:
+    prove:
+        forall x, y R:
+            x - y != 0
+            =>:
+                (x^2 - y^2) / (x - y) = x + y
+    know (x^2 - y^2) / (x - y) = x + y
+
+
+
+#--------------------------TODO---------------------------------
+"""
+example (x y : ℝ) (h : x - y ≠ 0) : (x ^ 2 - y ^ 2) / (x - y) = x + y := by
+  field_simp [h]
+  ring
+
+example {f : ℝ → ℝ} (h : Surjective f) : ∃ x, f x ^ 2 = 4 := by
+  rcases h 2 with ⟨x, hx⟩
+  use x
+  rw [hx]
+  norm_num
+
+end
+
+section
+open Function
+variable {α : Type*} {β : Type*} {γ : Type*}
+variable {g : β → γ} {f : α → β}
+
+example (surjg : Surjective g) (surjf : Surjective f) : Surjective fun x ↦ g (f x) := by
+  sorry
+
+end
+"""

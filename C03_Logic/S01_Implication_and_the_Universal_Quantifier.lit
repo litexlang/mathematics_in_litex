@@ -134,94 +134,161 @@ claim:
                 $monotone(f \FnAdd g)
     know $monotone(f \FnAdd g)
 
+# example {c : ℝ} (mf : Monotone f) (nnc : 0 ≤ c) : Monotone fun x ↦ c * f x
+have fn cMul(c R, f fn(x R)R) fn(x R)R = c * f(x)
+claim:
+    prove:
+        forall f fn(x R)R, c R:
+            $monotone(f)
+            0 <= c
+            =>:
+                $monotone(c \cMul f)
+    know $monotone(c \cMul f)
 
-#------------------------TODO--------------------
+# example (mf : Monotone f) (mg : Monotone g) : Monotone fun x ↦ f (g x)
+have fn compose(f, g fn(x R)R) fn(x R)R = f(g(x))
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $monotone(f)
+            $monotone(g)
+            =>:
+                $monotone(f \compose g)
+    know $monotone(f \compose g)
+
 """
-section
-variable (f g : ℝ → ℝ)
-
-example (mf : Monotone f) (mg : Monotone g) : Monotone fun x ↦ f x + g x := by
-  intro a b aleb
-  apply FnAdd_le_FnAdd
-  apply mf aleb
-  apply mg aleb
-
-example (mf : Monotone f) (mg : Monotone g) : Monotone fun x ↦ f x + g x :=
-  fun a b aleb ↦ FnAdd_le_FnAdd (mf aleb) (mg aleb)
-
-example {c : ℝ} (mf : Monotone f) (nnc : 0 ≤ c) : Monotone fun x ↦ c * f x :=
-  sorry
-
-example (mf : Monotone f) (mg : Monotone g) : Monotone fun x ↦ f (g x) :=
-  sorry
-
 def FnEven (f : ℝ → ℝ) : Prop :=
   ∀ x, f x = f (-x)
 
 def FnOdd (f : ℝ → ℝ) : Prop :=
   ∀ x, f x = -f (-x)
+"""
+prop FnEven(f fn(x R)R):
+    forall x R:
+        f(x) = f(-x)
 
-example (ef : FnEven f) (eg : FnEven g) : FnEven fun x ↦ f x + g x := by
-  intro x
-  calc
-    (fun x ↦ f x + g x) x = f x + g x := rfl
-    _ = f (-x) + g (-x) := by rw [ef, eg]
+prop FnOdd(f fn(x R)R):
+    forall x R:
+        f(x) = -f(-x)
 
+# example (ef : FnEven f) (eg : FnEven g) : FnEven fun x ↦ f x + g x
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $FnEven(f)
+            $FnEven(g)
+            =>:
+                $FnEven(f \FnAdd g)
+    know $FnEven(f \FnAdd g)
 
-example (of : FnOdd f) (og : FnOdd g) : FnEven fun x ↦ f x * g x := by
-  sorry
+# example (of : FnOdd f) (og : FnOdd g) : FnEven fun x ↦ f x * g x
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $FnOdd(f)
+            $FnOdd(g)
+            =>:
+                $FnEven(f \FnMul g)
+    know $FnEven(f \FnMul g)
 
-example (ef : FnEven f) (og : FnOdd g) : FnOdd fun x ↦ f x * g x := by
-  sorry
+# example (ef : FnEven f) (og : FnOdd g) : FnOdd fun x ↦ f x * g x
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $FnEven(f)
+            $FnOdd(g)
+            =>:
+                $FnOdd(f \FnMul g)
+    know $FnOdd(f \FnMul g)
 
-example (ef : FnEven f) (og : FnOdd g) : FnEven fun x ↦ f (g x) := by
-  sorry
+# example (ef : FnEven f) (og : FnOdd g) : FnEven fun x ↦ f (g x)
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $FnEven(f)
+            $FnOdd(g)
+            =>:
+                $FnEven(f \compose g)
+    know $FnEven(f \compose g)
 
-end
+# more examples for manipulating sets
+# example : s ⊆ s
+claim:
+    prove:
+        forall s power_set(alpha):
+            s $subset s
+    know s $subset s
 
-section
+# theorem Subset.trans : r ⊆ s → s ⊆ t → r ⊆ t
+claim:
+    prove:
+        forall r, s, t power_set(alpha):
+            r $subset s
+            s $subset t
+            =>:
+                r $subset t
+    know r $subset t
 
-variable {α : Type*} (r s t : Set α)
-
-example : s ⊆ s := by
-  intro x xs
-  exact xs
-
-theorem Subset.refl : s ⊆ s := fun x xs ↦ xs
-
-theorem Subset.trans : r ⊆ s → s ⊆ t → r ⊆ t := by
-  sorry
-
-end
-
-section
-variable {α : Type*} [PartialOrder α]
-variable (s : Set α) (a b : α)
-
+"""
 def SetUb (s : Set α) (a : α) :=
   ∀ x, x ∈ s → x ≤ a
+"""
+prop SetUb(s set, a s):
+    forall x s:
+        $PartialOrder(s, x, a)
 
-example (h : SetUb s a) (h' : a ≤ b) : SetUb s b :=
-  sorry
+# example (h : SetUb s a) (h' : a ≤ b) : SetUb s b
+claim:
+    prove:
+        forall s set, a, b s:
+            $SetUb(s, a)
+            $PartialOrder(s, a, b)
+            =>:
+                $SetUb(s, b)
+    know $SetUb(s, b)
 
-end
+"""
+A function f is said to be injective if for every x1 and x2, if f(x1) = f(x2) then x1 = x2.
+"""
+prop injective(s, t set, f fn(x s)t):
+    forall x1, x2 s:
+        f(x1) = f(x2)
+        =>:
+            x1 = x2
 
-section
+# example (c : ℝ) : Injective fun x ↦ x + c
+have fn AddC(f fn(x R)R, c R) fn(x R)R = f(x) + c
+claim:
+    prove:
+        forall f fn(x R)R, c R:
+            $injective(R, R, f)
+            =>:
+                $injective(R, R, f \AddC c)
+    know $injective(R, R, f \AddC c)
 
-open Function
+# example {c : ℝ} (h : c ≠ 0) : Injective fun x ↦ c * x
+claim:
+    prove:
+        forall f fn(x R)R, c R:
+            c != 0
+            $injective(R, R, f)
+            =>:
+                $injective(R, R, c \cMul f)
+    know $injective(R, R, c \cMul f)
 
-example (c : ℝ) : Injective fun x ↦ x + c := by
-  intro x₁ x₂ h'
-  exact (FnAdd_left_inj c).mp h'
-
-example {c : ℝ} (h : c ≠ 0) : Injective fun x ↦ c * x := by
-  sorry
-
+"""
 variable {α : Type*} {β : Type*} {γ : Type*}
 variable {g : β → γ} {f : α → β}
 
 example (injg : Injective g) (injf : Injective f) : Injective fun x ↦ g (f x) := by
   sorry
-
-end
 """
+claim:
+    prove:
+        forall f, g fn(x R)R:
+            $injective(R, R, f)
+            $injective(R, R, g)
+            =>:
+                $injective(R, R, g \compose f)
+    know $injective(R, R, g \compose f)
+
